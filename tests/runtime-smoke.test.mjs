@@ -31,6 +31,10 @@ class FakeElement {
     this.classList = new FakeClassList();
     this.listeners = {};
     this.children = [];
+    this.childMap = new Map();
+    this.style = {
+      setProperty() {}
+    };
     this.textContent = "";
     this.value = "";
     this.scrollTop = 0;
@@ -51,6 +55,17 @@ class FakeElement {
 
   addEventListener(type, callback) {
     this.listeners[type] = callback;
+  }
+
+  querySelector(selector) {
+    if (!this.childMap.has(selector)) {
+      this.childMap.set(selector, new FakeElement(selector));
+    }
+    return this.childMap.get(selector);
+  }
+
+  getBoundingClientRect() {
+    return { left: 0, top: 0, width: 600, height: 400 };
   }
 
   click() {
@@ -74,9 +89,12 @@ const ids = [
   "chapterGoal",
   "storyText",
   "storyChoices",
+  "roomScene",
   "openPanelButton",
   "nextSceneButton",
   "memoryPanel",
+  "hoverLabel",
+  "mouseHint",
   "closenessMeter",
   "trustMeter",
   "stressMeter",
@@ -89,6 +107,7 @@ const ids = [
 ];
 
 const elements = new Map(ids.map((id) => [`#${id}`, new FakeElement(`#${id}`)]));
+elements.set("#roomScene", new FakeElement("#roomScene"));
 const actions = ["talk", "morning", "night", "stress", "music", "promise", "gift", "hug", "kiss", "sulk", "game"]
   .map((action) => new FakeElement("[data-action]", { action }));
 const tabs = ["memories", "diary", "promises"].map((tab) => new FakeElement("[data-tab]", { tab }));
@@ -162,5 +181,14 @@ assert.equal(elements.get("#memoryPanel").classList.contains("collapsed"), false
 
 elements.get("#nextSceneButton").click();
 assert.match(elements.get("#interactionState").textContent, /镜头拉近|伸手触碰|靠近玩耍|短暂僵住|重新靠近|拥抱|亲吻|闹脾气|一起玩游戏|一起待在房间/);
+
+elements.get("#roomScene").listeners.pointermove?.({ clientX: 300, clientY: 200 });
+assert.match(elements.get("#mouseHint").textContent, /镜头偏移/);
+assert.match(elements.get("#hoverLabel").textContent, /把鼠标移到角色上|对她说话|拥抱她|一起玩|亲吻她/);
+
+elements.get("#roomScene").querySelector(".hotspot-face").listeners.pointerenter?.();
+assert.match(elements.get("#hoverLabel").textContent, /看着她的眼睛说话/);
+elements.get("#roomScene").querySelector(".hotspot-face").listeners.click?.();
+assert.match(elements.get("#dialogue").innerHTML, /说话/);
 
 console.log("Runtime smoke checks passed.");

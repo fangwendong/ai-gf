@@ -329,7 +329,8 @@ const defaultState = {
       text: "你好，我是林栖。今晚的房间有一点安静，但你来了，就刚刚好。"
     }
   ],
-  lastVisit: null
+  lastVisit: null,
+  hoverTarget: "把鼠标移到角色上"
 };
 
 let state = loadState();
@@ -348,6 +349,8 @@ const els = {
   closenessMeter: document.querySelector("#closenessMeter"),
   trustMeter: document.querySelector("#trustMeter"),
   stressMeter: document.querySelector("#stressMeter"),
+  hoverLabel: document.querySelector("#hoverLabel"),
+  mouseHint: document.querySelector("#mouseHint"),
   dialogue: document.querySelector("#dialogue"),
   chatForm: document.querySelector("#chatForm"),
   chatInput: document.querySelector("#chatInput"),
@@ -427,6 +430,12 @@ function setPanelOpen(open) {
   state.panelOpen = open;
   els.memoryPanel.classList.toggle("collapsed", !open);
   els.openPanelButton.textContent = open ? "收起" : "记录";
+  saveState();
+}
+
+function setHoverTarget(target) {
+  state.hoverTarget = target;
+  els.hoverLabel.textContent = target;
   saveState();
 }
 
@@ -512,6 +521,7 @@ function render() {
   setRelationScene(state.relationScene);
   els.openPanelButton.textContent = state.panelOpen ? "收起" : "记录";
   els.memoryPanel.classList.toggle("collapsed", !state.panelOpen);
+  els.hoverLabel.textContent = state.hoverTarget;
   els.closenessMeter.value = state.closeness;
   els.trustMeter.value = state.trust;
   els.stressMeter.value = state.stress;
@@ -603,6 +613,58 @@ function escapeHtml(value) {
 
 document.querySelectorAll("[data-action]").forEach((button) => {
   button.addEventListener("click", () => handleAction(button.dataset.action));
+});
+
+const roomScene = document.querySelector("#roomScene");
+let sceneDragging = false;
+const hotspotMap = [
+  { selector: ".hotspot-face", label: "看着她的眼睛说话", action: "talk" },
+  { selector: ".hotspot-shoulder", label: "靠近一点，轻轻抱住她", action: "hug" },
+  { selector: ".hotspot-hand", label: "拉着她一起玩", action: "game" },
+  { selector: ".hotspot-lips", label: "停在很近的距离", action: "kiss" }
+];
+
+hotspotMap.forEach(({ selector, label, action }) => {
+  roomScene.querySelector(selector).addEventListener("pointerenter", () => {
+    setHoverTarget(label);
+    els.mouseHint.textContent = "点一下就能直接触发动作";
+  });
+  roomScene.querySelector(selector).addEventListener("pointerleave", () => {
+    setHoverTarget("把鼠标移到角色上");
+    els.mouseHint.textContent = "移动鼠标会改变镜头";
+  });
+  roomScene.querySelector(selector).addEventListener("click", () => handleAction(action));
+});
+
+roomScene.addEventListener("pointermove", (event) => {
+  const rect = roomScene.getBoundingClientRect();
+  const x = ((event.clientX - rect.left) / rect.width - 0.5) * 2;
+  const y = ((event.clientY - rect.top) / rect.height - 0.5) * 2;
+  const scale = sceneDragging ? 28 : 18;
+  const depth = sceneDragging ? 18 : 12;
+  roomScene.style.setProperty("--focus-x", `${(x * scale).toFixed(2)}px`);
+  roomScene.style.setProperty("--focus-y", `${(y * depth).toFixed(2)}px`);
+  els.mouseHint.textContent = sceneDragging
+    ? `拖动中 ${x > 0 ? "右" : "左"} ${y > 0 ? "下" : "上"}`
+    : `镜头偏移 ${x > 0 ? "右" : "左"} ${y > 0 ? "下" : "上"}`;
+});
+
+roomScene.addEventListener("pointerdown", () => {
+  sceneDragging = true;
+  els.mouseHint.textContent = "按住拖动可以调整镜头";
+});
+
+roomScene.addEventListener("pointerup", () => {
+  sceneDragging = false;
+  els.mouseHint.textContent = "移动鼠标会改变镜头";
+});
+
+roomScene.addEventListener("pointerleave", () => {
+  sceneDragging = false;
+  setHoverTarget("把鼠标移到角色上");
+  els.mouseHint.textContent = "移动鼠标会改变镜头";
+  roomScene.style.setProperty("--focus-x", "0px");
+  roomScene.style.setProperty("--focus-y", "0px");
 });
 
 document.querySelectorAll("[data-tab]").forEach((button) => {

@@ -69,9 +69,28 @@ button:active {
 }
 
 .room-scene {
+  --focus-x: 0px;
+  --focus-y: 0px;
+  --scene-shift: 0px;
+  cursor: grab;
   background:
-    radial-gradient(circle at 28% 18%, rgba(242, 198, 109, 0.22), transparent 24%),
+    radial-gradient(circle at calc(28% + var(--focus-x)) calc(18% + var(--focus-y)), rgba(242, 198, 109, 0.28), transparent 24%),
     linear-gradient(180deg, rgba(22, 22, 42, 0.5), rgba(20, 12, 16, 0.82));
+}
+
+.room-scene:active {
+  cursor: grabbing;
+}
+
+.room-scene::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at calc(48% + var(--focus-x)) calc(30% + var(--focus-y)), rgba(255, 255, 255, 0.08), transparent 32%),
+    radial-gradient(circle at calc(52% - var(--focus-x)) calc(70% - var(--focus-y)), rgba(217, 88, 120, 0.08), transparent 26%);
+  mix-blend-mode: screen;
+  pointer-events: none;
 }
 
 .portrait-card {
@@ -79,6 +98,7 @@ button:active {
   inset: 0;
   overflow: hidden;
   background: #120e15;
+  translate: calc(var(--focus-x) * 0.45) calc(var(--focus-y) * 0.45);
   animation: liveIdle 5.2s ease-in-out infinite;
 }
 
@@ -86,6 +106,26 @@ button:active {
   position: absolute;
   inset: 0;
   z-index: 4;
+}
+
+.scene-hud {
+  position: absolute;
+  top: 18px;
+  left: 18px;
+  z-index: 6;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.scene-hud span {
+  padding: 6px 10px;
+  border: 1px solid rgba(255, 248, 243, 0.16);
+  border-radius: 999px;
+  color: rgba(255, 248, 243, 0.88);
+  background: rgba(20, 14, 20, 0.52);
+  backdrop-filter: blur(10px);
+  font-size: 0.82rem;
 }
 
 .hotspot {
