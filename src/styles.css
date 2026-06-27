@@ -278,16 +278,18 @@ h1 {
 
 .story-panel {
   position: absolute;
-  top: 18%;
+  left: max(24px, env(safe-area-inset-left));
   right: max(24px, env(safe-area-inset-right));
+  bottom: 180px;
   z-index: 7;
-  width: min(360px, 30vw);
-  padding: 18px;
-  border: 1px solid var(--line);
+  width: auto;
+  max-width: min(760px, 62vw);
+  padding: 16px 18px 14px;
+  border: 1px solid rgba(255, 248, 243, 0.14);
   border-radius: 8px;
-  background: linear-gradient(135deg, rgba(24, 18, 24, 0.66), rgba(60, 34, 52, 0.54));
-  box-shadow: var(--shadow);
-  backdrop-filter: blur(18px);
+  background: linear-gradient(180deg, rgba(18, 13, 20, 0.76), rgba(24, 18, 24, 0.58));
+  box-shadow: 0 16px 46px rgba(0, 0, 0, 0.24);
+  backdrop-filter: blur(14px);
 }
 
 .story-kicker {
@@ -299,14 +301,14 @@ h1 {
 }
 
 .story-panel h2 {
-  margin: 0 0 10px;
+  margin: 0 0 8px;
   font-size: 1.45rem;
   line-height: 1.18;
 }
 
 .chapter-goal {
   display: inline-block;
-  margin: 0 0 10px;
+  margin: 0 0 8px;
   padding: 6px 10px;
   border-radius: 999px;
   color: var(--gold);
@@ -323,8 +325,9 @@ h1 {
 
 .story-choices {
   display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 9px;
-  margin-top: 14px;
+  margin-top: 12px;
 }
 
 .story-choices button {
@@ -342,21 +345,21 @@ h1 {
   bottom: max(18px, env(safe-area-inset-bottom));
   z-index: 9;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(280px, 0.56fr);
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 0.46fr);
   gap: 14px;
   align-items: end;
 }
 
 .dialogue {
-  min-height: 170px;
-  max-height: 30vh;
+  min-height: 150px;
+  max-height: 26vh;
   overflow: auto;
-  padding: 18px 20px;
-  border: 1px solid var(--line);
+  padding: 16px 18px;
+  border: 1px solid rgba(255, 248, 243, 0.12);
   border-radius: 8px;
-  background: linear-gradient(180deg, rgba(18, 13, 20, 0.78), rgba(18, 13, 20, 0.64));
-  box-shadow: var(--shadow);
-  backdrop-filter: blur(18px);
+  background: linear-gradient(180deg, rgba(18, 13, 20, 0.72), rgba(18, 13, 20, 0.58));
+  box-shadow: 0 16px 46px rgba(0, 0, 0, 0.24);
+  backdrop-filter: blur(14px);
 }
 
 .bubble {
@@ -421,18 +424,18 @@ h1 {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 8px;
   padding: 12px;
-  border: 1px solid var(--line);
+  border: 1px solid rgba(255, 248, 243, 0.12);
   border-radius: 8px;
-  background: rgba(20, 14, 20, 0.5);
-  box-shadow: var(--shadow);
-  backdrop-filter: blur(16px);
+  background: rgba(20, 14, 20, 0.42);
+  box-shadow: 0 16px 46px rgba(0, 0, 0, 0.22);
+  backdrop-filter: blur(14px);
 }
 
 .memory-panel {
   position: absolute;
   top: auto;
   left: max(18px, env(safe-area-inset-left));
-  bottom: 96px;
+  bottom: 90px;
   z-index: 7;
   width: 246px;
   max-height: 54vh;
@@ -695,10 +698,10 @@ meter {
   }
 
   .story-panel {
-    top: 106px;
-    right: 12px;
     left: 12px;
-    width: auto;
+    right: 12px;
+    bottom: 164px;
+    max-width: none;
     padding: 13px;
   }
 
@@ -728,7 +731,7 @@ meter {
     left: 12px;
     right: 12px;
     width: auto;
-    bottom: 86px;
+    bottom: 82px;
     max-height: 36vh;
   }
 }
@@ -740,7 +743,7 @@ meter {
   }
 
   .story-panel {
-    top: 92px;
+    bottom: 156px;
   }
 
   .story-panel h2 {
