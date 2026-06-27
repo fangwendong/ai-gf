@@ -85,7 +85,7 @@ const ids = [
 ];
 
 const elements = new Map(ids.map((id) => [`#${id}`, new FakeElement(`#${id}`)]));
-const actions = ["morning", "night", "stress", "music", "promise", "gift", "hug", "kiss", "sulk", "game"]
+const actions = ["talk", "morning", "night", "stress", "music", "promise", "gift", "hug", "kiss", "sulk", "game"]
   .map((action) => new FakeElement("[data-action]", { action }));
 const tabs = ["memories", "diary", "promises"].map((tab) => new FakeElement("[data-tab]", { tab }));
 const roomItems = ["vinyl", "mug", "photo"].map((item) => new FakeElement(".room-item", { item }));
@@ -140,6 +140,9 @@ await import("../src/app.js");
 
 assert.equal(elements.get("#chapterTitle").textContent, "雨夜来信");
 assert.match(elements.get("#dialogue").innerHTML, /林栖/);
+
+actions.find((action) => action.dataset.action === "talk").click();
+assert.match(elements.get("#dialogue").innerHTML, /说话/);
 
 actions.find((action) => action.dataset.action === "hug").click();
 assert.match(elements.get("#dialogue").innerHTML, /拥抱/);

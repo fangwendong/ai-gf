@@ -9,6 +9,15 @@ const stages = [
 ];
 
 const actionData = {
+  talk: {
+    label: "说话",
+    mood: "平静",
+    closeness: 2,
+    trust: 1,
+    stress: -1,
+    memory: "你主动和林栖说了话。",
+    reply: "嗯，我在听。你可以靠近一点再说，我想把你的语气记得更清楚。"
+  },
   morning: {
     label: "早安",
     mood: "轻快",
