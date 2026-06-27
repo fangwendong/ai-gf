@@ -65,6 +65,47 @@ const actionData = {
     item: "mug",
     memory: "你送给林栖一杯热牛奶。",
     reply: "谢谢你。我会把杯子放在桌边，每次看到都记得这是你选的。"
+  },
+  hug: {
+    label: "拥抱",
+    mood: "靠近",
+    scene: "hug",
+    closeness: 8,
+    trust: 4,
+    stress: -7,
+    memory: "你和林栖在房间里安静地拥抱了一会儿。",
+    reply: "抱一下就好。别急着说话，我想先确认你真的在我身边。"
+  },
+  kiss: {
+    label: "亲吻",
+    mood: "害羞",
+    scene: "kiss",
+    closeness: 9,
+    trust: 5,
+    stress: -6,
+    memory: "你轻轻亲吻了林栖，她红着脸记住了这个瞬间。",
+    reply: "这一下太突然了……但我没有讨厌。下次，先看着我。"
+  },
+  sulk: {
+    label: "闹脾气",
+    mood: "小脾气",
+    scene: "sulk",
+    closeness: 2,
+    trust: 4,
+    stress: 8,
+    memory: "你们第一次闹了点小脾气，但没有离开彼此。",
+    reply: "我不是想赢你。我只是想知道，在我不乖的时候，你还会不会留下。"
+  },
+  game: {
+    label: "玩游戏",
+    mood: "轻快",
+    scene: "game",
+    closeness: 7,
+    trust: 3,
+    stress: -8,
+    memory: "你和林栖靠在一起玩了一局小游戏。",
+    promise: "下次一起玩一局不许让她的小游戏。",
+    reply: "你刚才是不是故意让我的？算了，我先记一分，下局不许放水。"
   }
 };
 
@@ -250,6 +291,7 @@ const defaultState = {
   mood: "平静",
   unlockedItems: [],
   storyStep: 0,
+  relationScene: "together",
   memories: ["你第一次启动了林栖，她记住了这个晚上。"],
   diary: ["第 1 天：有个人走进了这个房间。林栖说，她想慢慢认识你。"],
   promises: [],
@@ -268,6 +310,9 @@ const els = {
   dayText: document.querySelector("#dayText"),
   stageText: document.querySelector("#stageText"),
   moodText: document.querySelector("#moodText"),
+  portraitCard: document.querySelector("#portraitCard"),
+  portraitMood: document.querySelector("#portraitMood"),
+  interactionState: document.querySelector("#interactionState"),
   chapterKicker: document.querySelector("#chapterKicker"),
   chapterTitle: document.querySelector("#chapterTitle"),
   storyText: document.querySelector("#storyText"),
@@ -322,6 +367,7 @@ function applyChange(data) {
   addUnique(state.memories, data.memory);
   if (data.promise) addUnique(state.promises, data.promise);
   if (data.item) addUnique(state.unlockedItems, data.item);
+  if (data.scene) state.relationScene = data.scene;
   if (data.diary) addUnique(state.diary, `第 ${state.day} 天：${data.diary}`);
   else maybeWriteDiary(data.label);
 }
@@ -404,6 +450,9 @@ function render() {
   els.dayText.textContent = `第 ${state.day} 天`;
   els.stageText.textContent = currentStage().name;
   els.moodText.textContent = state.mood;
+  els.portraitMood.textContent = state.mood;
+  setPortraitMood(state.mood);
+  setRelationScene(state.relationScene);
   els.closenessMeter.value = state.closeness;
   els.trustMeter.value = state.trust;
   els.stressMeter.value = state.stress;
@@ -424,6 +473,35 @@ function render() {
   document.querySelectorAll(".room-item").forEach((button) => {
     button.classList.toggle("locked", !state.unlockedItems.includes(button.dataset.item));
   });
+}
+
+function setPortraitMood(mood) {
+  const moodClass = moodToClass(mood);
+  const sceneClass = sceneToClass(state.relationScene);
+  els.portraitCard.className = `portrait-card ${moodClass} ${sceneClass}`;
+}
+
+function setRelationScene(scene) {
+  const labels = {
+    together: "一起待在房间",
+    hug: "拥抱",
+    kiss: "亲吻",
+    sulk: "闹脾气",
+    game: "一起玩游戏"
+  };
+  els.interactionState.textContent = labels[scene] || labels.together;
+}
+
+function sceneToClass(scene) {
+  return `scene-${scene || "together"}`;
+}
+
+function moodToClass(mood) {
+  if (/开心|轻快|期待|温柔/.test(mood)) return "mood-happy";
+  if (/害羞|靠近|被看见/.test(mood)) return "mood-shy";
+  if (/担心|心疼|小脾气/.test(mood)) return "mood-worried";
+  if (/认真|释然|安心/.test(mood)) return "mood-soft";
+  return "mood-calm";
 }
 
 function renderStory() {

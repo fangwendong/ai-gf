@@ -36,11 +36,16 @@
               <button class="room-item locked" data-item="mug" type="button" aria-label="热牛奶">☕</button>
               <button class="room-item locked" data-item="photo" type="button" aria-label="合照">□</button>
             </div>
-            <div class="portrait-card" aria-label="林栖照片">
-              <img src="assets/girlfriend-portrait.jpg" alt="林栖">
+            <div class="portrait-card mood-calm scene-together" id="portraitCard" aria-label="2D 双人动态场景">
+              <img src="assets/couple-main.png" alt="2D 男主和林栖">
+              <span class="blink blink-left"></span>
+              <span class="blink blink-right"></span>
+              <span class="emotion-aura"></span>
+              <span class="motion-light"></span>
+              <span class="interaction-state" id="interactionState">一起待在房间</span>
               <div class="portrait-caption">
-                <strong>林栖</strong>
-                <span>22:41 在线</span>
+                <strong>林栖 & 你</strong>
+                <span id="portraitMood">平静</span>
               </div>
             </div>
             <div class="desk">
@@ -88,6 +93,10 @@
             <button data-action="music" type="button">听歌</button>
             <button data-action="promise" type="button">做约定</button>
             <button data-action="gift" type="button">送礼物</button>
+            <button data-action="hug" type="button">拥抱</button>
+            <button data-action="kiss" type="button">亲吻</button>
+            <button data-action="sulk" type="button">闹脾气</button>
+            <button data-action="game" type="button">玩游戏</button>
           </div>
         </section>
 

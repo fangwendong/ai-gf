@@ -1,10 +1,19 @@
 # 素材来源
 
-## 人物主视觉
+## 2D 人物主视觉
 
-- 文件：`assets/girlfriend-portrait.jpg`
-- 来源：Pexels
-- 原图页面：https://www.pexels.com/photo/elegant-young-woman-in-natural-light-portrait-32085610/
-- 许可说明：https://www.pexels.com/license/
+- 文件：`assets/linqi-2d.png`
+- 生成方式：Codex 内置 image generation 工具
+- 用途：AI女友原型的 2D 视觉小说角色主视觉
 
-该素材用于原型阶段主视觉。正式商业版本建议采购专属授权素材、约稿角色图，或使用自有模特/AI 生成角色并确认肖像与商业授权。
+生成提示摘要：成人女性 2D 视觉小说角色，温柔清纯、现代针织衫和连衣裙、夜晚卧室背景、干净线稿、柔和赛璐璐上色、无文字和水印。
+
+## 2D 双人互动主视觉
+
+- 文件：`assets/couple-main.png`
+- 生成方式：Codex 内置 image generation 工具
+- 用途：男主和林栖同屏的双人关系场景，用于拥抱、亲吻、闹脾气、玩游戏等互动事件的主画面。
+
+生成提示摘要：成人男主和成人女友林栖，同处温暖夜晚卧室，视觉小说 CG，亲密但非露骨，适合移动端恋爱陪伴游戏。
+
+正式商业版本建议约稿独占角色设定、拆分 Live2D 图层，或使用具备清晰商业授权的角色资产。

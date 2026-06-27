@@ -1,10 +1,11 @@
-const CACHE_NAME = "ai-gf-v2";
+const CACHE_NAME = "ai-gf-v4";
 const ASSETS = [
   "./",
   "./index.html",
   "./manifest.webmanifest",
   "./assets/icon.svg",
-  "./assets/girlfriend-portrait.jpg",
+  "./assets/linqi-2d.png",
+  "./assets/couple-main.png",
   "./src/styles.css",
   "./src/app.js"
 ];
