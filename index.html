@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#e56d7f">
+    <title>晚安频率</title>
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="stylesheet" href="src/styles.css">
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">AI Companion Game</p>
+          <h1>晚安频率</h1>
+        </div>
+        <div class="status-strip" aria-label="关系状态">
+          <span id="dayText">第 1 天</span>
+          <span id="stageText">相遇</span>
+          <span id="moodText">平静</span>
+        </div>
+      </header>
+
+      <main class="game-layout">
+        <section class="room-panel" aria-label="共同生活房间">
+          <div class="room-scene" id="roomScene">
+            <div class="window">
+              <span class="moon"></span>
+              <span class="star star-a"></span>
+              <span class="star star-b"></span>
+              <span class="star star-c"></span>
+            </div>
+            <div class="shelf">
+              <button class="room-item locked" data-item="vinyl" type="button" aria-label="唱片">♪</button>
+              <button class="room-item locked" data-item="mug" type="button" aria-label="热牛奶">☕</button>
+              <button class="room-item locked" data-item="photo" type="button" aria-label="合照">□</button>
+            </div>
+            <div class="character" id="character" aria-label="林栖">
+              <div class="hair"></div>
+              <div class="face">
+                <span class="eye left"></span>
+                <span class="eye right"></span>
+                <span class="mouth"></span>
+              </div>
+              <div class="neck"></div>
+              <div class="body"></div>
+              <div class="arm left-arm"></div>
+              <div class="arm right-arm"></div>
+            </div>
+            <div class="desk">
+              <span class="lamp"></span>
+              <span class="book"></span>
+            </div>
+          </div>
+
+          <div class="meters">
+            <div>
+              <span>亲密</span>
+              <meter id="closenessMeter" min="0" max="100" value="12"></meter>
+            </div>
+            <div>
+              <span>信任</span>
+              <meter id="trustMeter" min="0" max="100" value="10"></meter>
+            </div>
+            <div>
+              <span>压力</span>
+              <meter id="stressMeter" min="0" max="100" value="20"></meter>
+            </div>
+          </div>
+        </section>
+
+        <section class="interaction-panel" aria-label="互动">
+          <div class="dialogue" id="dialogue" aria-live="polite"></div>
+
+          <form class="chat-form" id="chatForm">
+            <label class="sr-only" for="chatInput">和林栖说话</label>
+            <input id="chatInput" maxlength="80" autocomplete="off" placeholder="输入一句话，例如：今天有点累">
+            <button type="submit">发送</button>
+          </form>
+
+          <div class="actions" aria-label="陪伴行动">
+            <button data-action="morning" type="button">早安</button>
+            <button data-action="night" type="button">晚安</button>
+            <button data-action="stress" type="button">有点累</button>
+            <button data-action="music" type="button">听歌</button>
+            <button data-action="promise" type="button">做约定</button>
+            <button data-action="gift" type="button">送礼物</button>
+          </div>
+        </section>
+
+        <aside class="memory-panel" aria-label="记忆与日记">
+          <nav class="tabs" aria-label="信息页签">
+            <button class="active" data-tab="memories" type="button">记忆</button>
+            <button data-tab="diary" type="button">日记</button>
+            <button data-tab="promises" type="button">约定</button>
+          </nav>
+          <div class="tab-content active" id="tab-memories"></div>
+          <div class="tab-content" id="tab-diary"></div>
+          <div class="tab-content" id="tab-promises"></div>
+        </aside>
+      </main>
+    </div>
+
+    <script src="src/app.js" type="module"></script>
+  </body>
+</html>
