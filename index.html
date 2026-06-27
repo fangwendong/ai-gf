@@ -3,114 +3,70 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-    <meta name="theme-color" content="#c04f68">
+    <meta name="theme-color" content="#1c2333">
     <title>AI女友</title>
     <link rel="manifest" href="manifest.webmanifest">
     <link rel="stylesheet" href="src/styles.css">
   </head>
   <body>
-    <div class="app-shell">
-      <main class="cinematic-stage" aria-label="AI女友沉浸式游戏">
-        <section class="room-panel" aria-label="沉浸式双人场景">
-          <div class="room-scene" id="roomScene">
-            <div class="scene-hud">
-              <span id="hoverLabel">把鼠标移到角色上</span>
-              <span id="mouseHint">移动鼠标会改变镜头</span>
-            </div>
-            <div class="portrait-card mood-calm scene-together" id="portraitCard" aria-label="2D 双人动态场景">
-              <img src="assets/couple-main.png" alt="2D 男主和林栖">
-              <span class="blink blink-left"></span>
-              <span class="blink blink-right"></span>
-              <span class="emotion-aura"></span>
-              <span class="motion-light"></span>
-              <div class="character-hotspots" aria-label="角色交互热区">
-                <button class="hotspot hotspot-face" data-action="talk" type="button" aria-label="对林栖说话"></button>
-                <button class="hotspot hotspot-shoulder" data-action="hug" type="button" aria-label="拥抱林栖"></button>
-                <button class="hotspot hotspot-hand" data-action="game" type="button" aria-label="一起玩游戏"></button>
-                <button class="hotspot hotspot-lips" data-action="kiss" type="button" aria-label="亲吻林栖"></button>
-              </div>
-            </div>
-          </div>
-        </section>
+    <main class="game-shell" aria-label="AI女友探索版">
+      <canvas id="gameCanvas" aria-label="AI女友探索地图"></canvas>
 
-        <header class="topbar">
-          <div>
-            <p class="eyebrow">v1.0 Mouse VN</p>
-            <h1>AI女友</h1>
-          </div>
-          <div class="status-strip" aria-label="关系状态">
-            <span id="dayText">第 1 天</span>
-            <span id="stageText">相遇</span>
-            <span id="moodText">平静</span>
-            <span id="interactionState">一起待在房间</span>
-          </div>
-        </header>
-
-        <div class="hud">
-          <button id="openPanelButton" type="button" aria-label="打开关系记录">记录</button>
-          <button id="nextSceneButton" type="button" aria-label="推进剧情">继续</button>
-          <button id="chatPanelButton" type="button" aria-label="切换对话面板">对话</button>
+      <header class="hud hud-top">
+        <div class="brand">
+          <p class="eyebrow">2D 探索版</p>
+          <h1>AI女友</h1>
+          <p class="objective" id="objectiveLabel">走到林栖身边</p>
         </div>
 
-        <section class="story-panel" aria-label="剧情章节">
-          <p class="story-kicker" id="chapterKicker">Chapter 01</p>
-          <h2 id="chapterTitle">雨夜来信</h2>
-          <p class="chapter-goal" id="chapterGoal">本幕目标：让她先开口。</p>
-          <p id="storyText"></p>
-          <div class="story-choices" id="storyChoices"></div>
-        </section>
-
-        <section class="interaction-panel" aria-label="对白与互动">
-          <div class="conversation-stack" id="conversationStack">
-            <div class="dialogue" id="dialogue" aria-live="polite"></div>
-
-            <form class="chat-form" id="chatForm">
-              <label class="sr-only" for="chatInput">和林栖说话</label>
-              <input id="chatInput" maxlength="80" autocomplete="off" placeholder="对林栖说一句话">
-              <button type="submit">发送</button>
-            </form>
-          </div>
-
-          <div class="actions" aria-label="双人互动">
-            <button data-action="hug" type="button">拥抱</button>
-            <button data-action="kiss" type="button">亲吻</button>
-            <button data-action="sulk" type="button">闹脾气</button>
-            <button data-action="game" type="button">玩游戏</button>
-            <button data-action="music" type="button">听歌</button>
-            <button data-action="night" type="button">晚安</button>
-            <button data-action="morning" type="button">早安</button>
-            <button data-action="stress" type="button">有点累</button>
-            <button data-action="promise" type="button">做约定</button>
-            <button data-action="gift" type="button">送礼物</button>
-          </div>
-        </section>
-      </main>
-
-      <aside class="memory-panel collapsed" id="memoryPanel" aria-label="关系记录">
-        <div class="meters">
-          <div>
-            <span>亲密</span>
-            <meter id="closenessMeter" min="0" max="100" value="12"></meter>
-          </div>
-          <div>
-            <span>信任</span>
-            <meter id="trustMeter" min="0" max="100" value="10"></meter>
-          </div>
-          <div>
-            <span>压力</span>
-            <meter id="stressMeter" min="0" max="100" value="20"></meter>
-          </div>
+        <div class="status-strip" aria-label="状态">
+          <span id="zoneLabel">公寓</span>
+          <span id="bondLabel">羁绊 0</span>
+          <span id="hintLabel">WASD / 拖动摇杆移动</span>
         </div>
-        <nav class="tabs" aria-label="信息页签">
-          <button class="active" data-tab="memories" type="button">记忆</button>
-          <button data-tab="diary" type="button">日记</button>
-          <button data-tab="promises" type="button">约定</button>
-        </nav>
-        <div class="tab-content active" id="tab-memories"></div>
-        <div class="tab-content" id="tab-diary"></div>
-        <div class="tab-content" id="tab-promises"></div>
+      </header>
+
+      <div class="hud hud-actions" aria-label="快捷操作">
+        <button id="questButton" type="button">任务</button>
+        <button id="photoButton" type="button" disabled>拍照</button>
+      </div>
+
+      <section class="prompt-bar" aria-label="当前提示">
+        <span class="prompt-text" id="promptText">先向前走，靠近林栖</span>
+        <div class="prompt-actions">
+          <button id="interactButton" type="button">互动</button>
+          <button id="dashButton" type="button" disabled>冲刺</button>
+        </div>
+      </section>
+
+      <section class="dialogue-sheet" id="dialogueSheet" hidden aria-label="剧情对话">
+        <p class="dialogue-kicker" id="dialogueKicker">林栖</p>
+        <p class="dialogue-text" id="dialogueText"></p>
+        <div class="dialogue-choices" id="dialogueChoices"></div>
+        <div class="dialogue-footer">
+          <button id="closeDialogueButton" type="button">继续探索</button>
+        </div>
+      </section>
+
+      <aside class="quest-panel collapsed" id="questPanel" aria-label="任务列表">
+        <div class="quest-panel-head">
+          <h2>任务</h2>
+          <button id="closeQuestButton" type="button">收起</button>
+        </div>
+        <ol id="questList"></ol>
       </aside>
-    </div>
+
+      <div class="touch-controls" aria-label="触摸控制">
+        <div class="joystick" id="joystick" aria-label="移动摇杆">
+          <span class="joystick-base"></span>
+          <span class="joystick-knob" id="joystickKnob"></span>
+        </div>
+        <div class="touch-actions">
+          <button id="touchInteractButton" type="button">互动</button>
+          <button id="touchDashButton" type="button" disabled>冲刺</button>
+        </div>
+      </div>
+    </main>
 
     <script src="src/app.js" type="module"></script>
   </body>

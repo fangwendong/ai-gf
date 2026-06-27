@@ -32,21 +32,17 @@ class FakeElement {
     this.listeners = {};
     this.children = [];
     this.childMap = new Map();
-    this.style = {
-      setProperty() {}
-    };
+    this.style = { setProperty() {} };
+    this.hidden = false;
+    this.disabled = false;
     this.textContent = "";
     this.value = "";
-    this.scrollTop = 0;
-    this.scrollHeight = 0;
   }
 
   set innerHTML(value) {
     this._innerHTML = value;
     this.children = [];
-    for (const match of value.matchAll(/data-choice="(\d+)"/g)) {
-      this.children.push(new FakeElement("[data-choice]", { choice: match[1] }));
-    }
+    this.childMap.clear();
   }
 
   get innerHTML() {
@@ -57,6 +53,11 @@ class FakeElement {
     this.listeners[type] = callback;
   }
 
+  appendChild(child) {
+    this.children.push(child);
+    return child;
+  }
+
   querySelector(selector) {
     if (!this.childMap.has(selector)) {
       this.childMap.set(selector, new FakeElement(selector));
@@ -64,57 +65,90 @@ class FakeElement {
     return this.childMap.get(selector);
   }
 
+  querySelectorAll(selector) {
+    if (selector === "button") return this.children;
+    return [];
+  }
+
   getBoundingClientRect() {
     return { left: 0, top: 0, width: 600, height: 400 };
   }
 
   click() {
-    this.listeners.click?.({ preventDefault() {} });
-  }
-
-  querySelectorAll(selector) {
-    if (selector === "[data-choice]") return this.children;
-    return [];
+    this.listeners.click?.({ preventDefault() {}, button: 0 });
   }
 }
 
-const ids = [
-  "dayText",
-  "stageText",
-  "moodText",
-  "portraitCard",
-  "interactionState",
-  "chapterKicker",
-  "chapterTitle",
-  "chapterGoal",
-  "storyText",
-  "storyChoices",
-  "roomScene",
-  "chatPanelButton",
-  "openPanelButton",
-  "nextSceneButton",
-  "memoryPanel",
-  "hoverLabel",
-  "mouseHint",
-  "closenessMeter",
-  "trustMeter",
-  "stressMeter",
-  "dialogue",
-  "chatForm",
-  "chatInput",
-  "tab-memories",
-  "tab-diary",
-  "tab-promises"
-];
+class FakeCanvas extends FakeElement {
+  constructor(selector) {
+    super(selector);
+    this.calls = [];
+    this.ctx = new Proxy(
+      {
+        canvas: this,
+        fillStyle: "#000",
+        strokeStyle: "#000",
+        lineWidth: 1,
+        font: "16px sans-serif",
+        globalAlpha: 1,
+        textAlign: "left"
+      },
+      {
+        get: (target, prop) => {
+          if (prop === "createLinearGradient" || prop === "createRadialGradient") {
+            return () => ({ addColorStop() {} });
+          }
+          if (prop === "measureText") return (text) => ({ width: String(text).length * 10 });
+          if (typeof prop === "string" && prop in target) return target[prop];
+          if (typeof prop === "string") {
+            return (...args) => {
+              this.calls.push({ method: prop, args });
+            };
+          }
+          return undefined;
+        },
+        set: (target, prop, value) => {
+          target[prop] = value;
+          return true;
+        }
+      }
+    );
+  }
 
-const elements = new Map(ids.map((id) => [`#${id}`, new FakeElement(`#${id}`)]));
-elements.set("#roomScene", new FakeElement("#roomScene"));
-elements.set(".interaction-panel", new FakeElement(".interaction-panel"));
-const actions = ["talk", "morning", "night", "stress", "music", "promise", "gift", "hug", "kiss", "sulk", "game"]
-  .map((action) => new FakeElement("[data-action]", { action }));
-const tabs = ["memories", "diary", "promises"].map((tab) => new FakeElement("[data-tab]", { tab }));
-const roomItems = ["vinyl", "mug", "photo"].map((item) => new FakeElement(".room-item", { item }));
-roomItems.forEach((item) => item.classList.add("locked"));
+  getContext() {
+    return this.ctx;
+  }
+}
+
+const elements = new Map();
+const canvas = new FakeCanvas("#gameCanvas");
+elements.set("#gameCanvas", canvas);
+
+[
+  "#objectiveLabel",
+  "#zoneLabel",
+  "#bondLabel",
+  "#hintLabel",
+  "#promptText",
+  "#interactButton",
+  "#dashButton",
+  "#photoButton",
+  "#questButton",
+  "#questPanel",
+  "#closeQuestButton",
+  "#questList",
+  "#dialogueSheet",
+  "#dialogueKicker",
+  "#dialogueText",
+  "#dialogueChoices",
+  "#closeDialogueButton",
+  "#joystick",
+  "#joystickKnob",
+  "#touchInteractButton",
+  "#touchDashButton"
+].forEach((selector) => {
+  elements.set(selector, new FakeElement(selector));
+});
 
 globalThis.localStorage = {
   data: new Map(),
@@ -123,6 +157,36 @@ globalThis.localStorage = {
   },
   setItem(key, value) {
     this.data.set(key, String(value));
+  }
+};
+
+globalThis.window = {
+  __AI_GF_DISABLE_AUTO_LOOP__: true,
+  devicePixelRatio: 1,
+  innerWidth: 1280,
+  innerHeight: 720,
+  matchMedia() {
+    return { matches: true, addEventListener() {}, removeEventListener() {} };
+  },
+  addEventListener() {},
+  location: {
+    reload() {
+      throw new Error("unexpected reload");
+    }
+  }
+};
+
+globalThis.document = {
+  querySelector(selector) {
+    const element = elements.get(selector);
+    assert.ok(element, `missing fake element for ${selector}`);
+    return element;
+  },
+  querySelectorAll() {
+    return [];
+  },
+  createElement(tagName) {
+    return new FakeElement(tagName);
   }
 };
 
@@ -138,62 +202,68 @@ Object.defineProperty(globalThis, "navigator", {
   }
 });
 
-globalThis.window = {
-  matchMedia() {
-    return { matches: true, addEventListener() {}, removeEventListener() {} };
-  },
-  location: {
-    reload() {
-      throw new Error("unexpected reload in smoke test");
-    }
-  }
-};
-
-globalThis.document = {
-  querySelector(selector) {
-    const element = elements.get(selector);
-    assert.ok(element, `missing fake element for ${selector}`);
-    return element;
-  },
-  querySelectorAll(selector) {
-    if (selector === "[data-action]") return actions;
-    if (selector === "[data-tab]") return tabs;
-    if (selector === ".tab-content") return [elements.get("#tab-memories"), elements.get("#tab-diary"), elements.get("#tab-promises")];
-    if (selector === ".room-item") return roomItems;
-    return [];
+globalThis.performance = {
+  now() {
+    return 0;
   }
 };
 
 await import("../src/app.js");
 
-assert.equal(elements.get("#chapterTitle").textContent, "雨夜来信");
-assert.match(elements.get("#chapterGoal").textContent, /本幕目标/);
-assert.match(elements.get("#dialogue").innerHTML, /林栖/);
+const debug = globalThis.window.__aiGfDebug;
+assert.ok(debug, "debug hook should exist");
+assert.equal(elements.get("#objectiveLabel").textContent, "先走到林栖身边");
+assert.match(elements.get("#promptText").textContent, /房间里等你|说话/);
+assert.ok(canvas.calls.length > 0, "canvas should render on bootstrap");
 
-actions.find((action) => action.dataset.action === "talk").click();
-assert.match(elements.get("#dialogue").innerHTML, /说话/);
+debug.state.player.x = 430;
+debug.state.player.y = 410;
+debug.interact();
+assert.equal(elements.get("#dialogueSheet").hidden, false);
+assert.match(elements.get("#dialogueText").textContent, /出去/);
+elements.get("#dialogueChoices").children[0].click();
+assert.equal(debug.state.questIndex, 1);
+assert.equal(elements.get("#objectiveLabel").textContent, "穿过门廊去街区");
+debug.closeDialogue();
 
-actions.find((action) => action.dataset.action === "hug").click();
-assert.match(elements.get("#dialogue").innerHTML, /拥抱/);
-assert.equal(elements.get("#interactionState").textContent, "拥抱");
+debug.state.player.x = 980;
+debug.state.player.y = 404;
+debug.interact();
+assert.equal(debug.state.questIndex, 2);
+assert.equal(debug.state.dashUnlocked, false);
+assert.equal(elements.get("#dashButton").disabled, true);
+debug.closeDialogue();
 
-elements.get("#storyChoices").children[0].click();
-assert.notEqual(elements.get("#chapterTitle").textContent, "雨夜来信");
-assert.match(elements.get("#dialogue").innerHTML, /雨伞|等|坐到她旁边|杯子|听歌|不高兴|周五/);
+debug.state.player.x = 1540;
+debug.state.player.y = 360;
+debug.interact();
+assert.equal(debug.state.questIndex, 3);
+assert.equal(debug.state.dashUnlocked, true);
+assert.equal(elements.get("#dashButton").disabled, false);
+debug.closeDialogue();
 
-elements.get("#openPanelButton").click();
-assert.equal(elements.get("#memoryPanel").classList.contains("collapsed"), false);
+debug.dash();
+assert.ok(debug.state.player.dash > 0);
 
-elements.get("#nextSceneButton").click();
-assert.match(elements.get("#interactionState").textContent, /镜头拉近|伸手触碰|靠近玩耍|短暂僵住|重新靠近|拥抱|亲吻|闹脾气|一起玩游戏|一起待在房间/);
+debug.state.player.x = 2480;
+debug.state.player.y = 1120;
+debug.interact();
+elements.get("#dialogueChoices").children[0].click();
+assert.equal(debug.state.questIndex, 4);
+debug.closeDialogue();
 
-elements.get("#roomScene").listeners.pointermove?.({ clientX: 300, clientY: 200 });
-assert.match(elements.get("#mouseHint").textContent, /镜头偏移/);
-assert.match(elements.get("#hoverLabel").textContent, /把鼠标移到角色上|对她说话|拥抱她|一起玩|亲吻她/);
+debug.state.player.x = 2810;
+debug.state.player.y = 980;
+debug.interact();
+elements.get("#dialogueChoices").children[0].click();
+assert.equal(debug.state.questIndex, 5);
+assert.equal(debug.state.photoUnlocked, true);
+assert.equal(elements.get("#photoButton").disabled, false);
+debug.closeDialogue();
 
-elements.get("#roomScene").querySelector(".hotspot-face").listeners.pointerenter?.();
-assert.match(elements.get("#hoverLabel").textContent, /看着她的眼睛说话/);
-elements.get("#roomScene").querySelector(".hotspot-face").listeners.click?.();
-assert.match(elements.get("#dialogue").innerHTML, /说话/);
+debug.photo();
+assert.equal(debug.state.photoCount > 0, true);
+assert.equal(elements.get("#dialogueSheet").hidden, false);
+assert.match(elements.get("#dialogueText").textContent, /快门/);
 
 console.log("Runtime smoke checks passed.");
