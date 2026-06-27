@@ -225,6 +225,21 @@ button:active {
   pointer-events: none;
 }
 
+.hud {
+  position: absolute;
+  top: max(18px, env(safe-area-inset-top));
+  right: max(18px, env(safe-area-inset-right));
+  z-index: 9;
+  display: flex;
+  gap: 8px;
+}
+
+.hud button {
+  min-height: 38px;
+  padding: 0 14px;
+  background: rgba(20, 14, 20, 0.62);
+}
+
 .eyebrow {
   margin: 0 0 4px;
   color: var(--gold);
@@ -263,10 +278,10 @@ h1 {
 
 .story-panel {
   position: absolute;
-  top: 22%;
+  top: 18%;
   right: max(24px, env(safe-area-inset-right));
   z-index: 7;
-  width: min(390px, 34vw);
+  width: min(360px, 30vw);
   padding: 18px;
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -316,7 +331,7 @@ h1 {
   bottom: max(18px, env(safe-area-inset-bottom));
   z-index: 9;
   display: grid;
-  grid-template-columns: minmax(360px, 1fr) minmax(330px, 0.62fr);
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 0.56fr);
   gap: 14px;
   align-items: end;
 }
@@ -404,17 +419,24 @@ h1 {
 
 .memory-panel {
   position: absolute;
-  top: 50%;
+  top: auto;
   left: max(18px, env(safe-area-inset-left));
+  bottom: 96px;
   z-index: 7;
   width: 246px;
   max-height: 54vh;
-  transform: translateY(-42%);
+  transform: translateY(0);
   border: 1px solid var(--line);
   border-radius: 8px;
   background: rgba(20, 14, 20, 0.44);
   box-shadow: var(--shadow);
   backdrop-filter: blur(16px);
+}
+
+.memory-panel.collapsed {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(16px);
 }
 
 .meters {
@@ -504,6 +526,29 @@ meter {
   animation-duration: 3.2s;
 }
 
+.scene-closeup img {
+  object-position: center 22%;
+  transform: scale(1.05);
+}
+
+.scene-touch img {
+  object-position: center 30%;
+  filter: saturate(1.05) contrast(1.02);
+}
+
+.scene-play img {
+  object-position: center 36%;
+  transform: scale(1.02) rotate(-0.3deg);
+}
+
+.scene-conflict img {
+  filter: saturate(0.88) contrast(0.92);
+}
+
+.scene-reconcile img {
+  filter: saturate(1.03) contrast(1.03);
+}
+
 .scene-hug .hotspot-shoulder,
 .scene-hug .hotspot-face {
   opacity: 0.42;
@@ -524,6 +569,27 @@ meter {
 
 .scene-kiss .hotspot-lips {
   opacity: 0.5;
+}
+
+.scene-closeup .hotspot-face {
+  opacity: 0.4;
+}
+
+.scene-touch .hotspot-shoulder {
+  opacity: 0.48;
+}
+
+.scene-play .hotspot-hand {
+  opacity: 0.5;
+}
+
+.scene-conflict .hotspot-face,
+.scene-conflict .hotspot-shoulder {
+  opacity: 0.2;
+}
+
+.scene-reconcile .hotspot-face {
+  opacity: 0.34;
 }
 
 .sr-only {
@@ -648,7 +714,11 @@ meter {
   }
 
   .memory-panel {
-    display: none;
+    left: 12px;
+    right: 12px;
+    width: auto;
+    bottom: 86px;
+    max-height: 36vh;
   }
 }
 

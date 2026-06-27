@@ -31,7 +31,7 @@
 
         <header class="topbar">
           <div>
-            <p class="eyebrow">v0.6 Interactive VN</p>
+            <p class="eyebrow">v0.7 VN Loop</p>
             <h1>AI女友</h1>
           </div>
           <div class="status-strip" aria-label="关系状态">
@@ -41,6 +41,11 @@
             <span id="interactionState">一起待在房间</span>
           </div>
         </header>
+
+        <div class="hud">
+          <button id="openPanelButton" type="button" aria-label="打开关系记录">记录</button>
+          <button id="nextSceneButton" type="button" aria-label="推进剧情">继续</button>
+        </div>
 
         <section class="story-panel" aria-label="剧情章节">
           <p class="story-kicker" id="chapterKicker">Chapter 01</p>
@@ -71,32 +76,32 @@
             <button data-action="gift" type="button">送礼物</button>
           </div>
         </section>
-
-        <aside class="memory-panel" aria-label="关系记录">
-          <div class="meters">
-            <div>
-              <span>亲密</span>
-              <meter id="closenessMeter" min="0" max="100" value="12"></meter>
-            </div>
-            <div>
-              <span>信任</span>
-              <meter id="trustMeter" min="0" max="100" value="10"></meter>
-            </div>
-            <div>
-              <span>压力</span>
-              <meter id="stressMeter" min="0" max="100" value="20"></meter>
-            </div>
-          </div>
-          <nav class="tabs" aria-label="信息页签">
-            <button class="active" data-tab="memories" type="button">记忆</button>
-            <button data-tab="diary" type="button">日记</button>
-            <button data-tab="promises" type="button">约定</button>
-          </nav>
-          <div class="tab-content active" id="tab-memories"></div>
-          <div class="tab-content" id="tab-diary"></div>
-          <div class="tab-content" id="tab-promises"></div>
-        </aside>
       </main>
+
+      <aside class="memory-panel collapsed" id="memoryPanel" aria-label="关系记录">
+        <div class="meters">
+          <div>
+            <span>亲密</span>
+            <meter id="closenessMeter" min="0" max="100" value="12"></meter>
+          </div>
+          <div>
+            <span>信任</span>
+            <meter id="trustMeter" min="0" max="100" value="10"></meter>
+          </div>
+          <div>
+            <span>压力</span>
+            <meter id="stressMeter" min="0" max="100" value="20"></meter>
+          </div>
+        </div>
+        <nav class="tabs" aria-label="信息页签">
+          <button class="active" data-tab="memories" type="button">记忆</button>
+          <button data-tab="diary" type="button">日记</button>
+          <button data-tab="promises" type="button">约定</button>
+        </nav>
+        <div class="tab-content active" id="tab-memories"></div>
+        <div class="tab-content" id="tab-diary"></div>
+        <div class="tab-content" id="tab-promises"></div>
+      </aside>
     </div>
 
     <script src="src/app.js" type="module"></script>

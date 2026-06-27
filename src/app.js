@@ -301,6 +301,8 @@ const defaultState = {
   unlockedItems: [],
   storyStep: 0,
   relationScene: "together",
+  sceneBeat: 0,
+  panelOpen: false,
   memories: ["你第一次启动了林栖，她记住了这个晚上。"],
   diary: ["第 1 天：有个人走进了这个房间。林栖说，她想慢慢认识你。"],
   promises: [],
@@ -331,10 +333,22 @@ const els = {
   dialogue: document.querySelector("#dialogue"),
   chatForm: document.querySelector("#chatForm"),
   chatInput: document.querySelector("#chatInput"),
+  openPanelButton: document.querySelector("#openPanelButton"),
+  nextSceneButton: document.querySelector("#nextSceneButton"),
+  memoryPanel: document.querySelector("#memoryPanel"),
   memories: document.querySelector("#tab-memories"),
   diary: document.querySelector("#tab-diary"),
   promises: document.querySelector("#tab-promises")
 };
+
+const sceneBeats = [
+  { mode: "together", label: "一起待在房间", line: "她安静地看着你，像在等你先开口。" },
+  { mode: "closeup", label: "镜头拉近", line: "镜头拉近了些，你能看清她眼睛里那一点犹豫。" },
+  { mode: "touch", label: "伸手触碰", line: "她没有躲，只是把手往你这边放了一点。" },
+  { mode: "play", label: "靠近玩耍", line: "你们靠得更近，像在共享同一段节奏。" },
+  { mode: "conflict", label: "短暂僵住", line: "她轻轻皱眉，房间里安静了一秒。" },
+  { mode: "reconcile", label: "重新靠近", line: "沉默过去后，她把目光重新放回你身上。" }
+];
 
 function loadState() {
   try {
@@ -378,6 +392,24 @@ function applyChange(data) {
   if (data.scene) state.relationScene = data.scene;
   if (data.diary) addUnique(state.diary, `第 ${state.day} 天：${data.diary}`);
   else maybeWriteDiary(data.label);
+}
+
+function advanceScene() {
+  state.sceneBeat = (state.sceneBeat + 1) % sceneBeats.length;
+  const beat = sceneBeats[state.sceneBeat];
+  state.relationScene = beat.mode;
+  state.mood = beat.mode === "conflict" ? "小脾气" : beat.mode === "reconcile" ? "释然" : state.mood;
+  addDialogue("linqi", beat.line);
+  addUnique(state.diary, `第 ${state.day} 天：${beat.label}。`);
+  saveState();
+  render();
+}
+
+function setPanelOpen(open) {
+  state.panelOpen = open;
+  els.memoryPanel.classList.toggle("collapsed", !open);
+  els.openPanelButton.textContent = open ? "收起" : "记录";
+  saveState();
 }
 
 function maybeWriteDiary(label) {
@@ -460,6 +492,8 @@ function render() {
   els.moodText.textContent = state.mood;
   setPortraitMood(state.mood);
   setRelationScene(state.relationScene);
+  els.openPanelButton.textContent = state.panelOpen ? "收起" : "记录";
+  els.memoryPanel.classList.toggle("collapsed", !state.panelOpen);
   els.closenessMeter.value = state.closeness;
   els.trustMeter.value = state.trust;
   els.stressMeter.value = state.stress;
@@ -491,6 +525,11 @@ function setPortraitMood(mood) {
 function setRelationScene(scene) {
   const labels = {
     together: "一起待在房间",
+    closeup: "镜头拉近",
+    touch: "伸手触碰",
+    play: "靠近玩耍",
+    conflict: "短暂僵住",
+    reconcile: "重新靠近",
     hug: "拥抱",
     kiss: "亲吻",
     sulk: "闹脾气",
@@ -568,6 +607,9 @@ document.querySelectorAll(".room-item").forEach((button) => {
     render();
   });
 });
+
+els.openPanelButton.addEventListener("click", () => setPanelOpen(!state.panelOpen));
+els.nextSceneButton.addEventListener("click", () => advanceScene());
 
 els.chatForm.addEventListener("submit", (event) => {
   event.preventDefault();

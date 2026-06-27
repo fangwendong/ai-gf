@@ -73,6 +73,9 @@ const ids = [
   "chapterTitle",
   "storyText",
   "storyChoices",
+  "openPanelButton",
+  "nextSceneButton",
+  "memoryPanel",
   "closenessMeter",
   "trustMeter",
   "stressMeter",
@@ -151,5 +154,11 @@ assert.equal(elements.get("#interactionState").textContent, "拥抱");
 elements.get("#storyChoices").children[0].click();
 assert.notEqual(elements.get("#chapterTitle").textContent, "雨夜来信");
 assert.match(elements.get("#dialogue").innerHTML, /问她等了多久|抱一下/);
+
+elements.get("#openPanelButton").click();
+assert.equal(elements.get("#memoryPanel").classList.contains("collapsed"), false);
+
+elements.get("#nextSceneButton").click();
+assert.match(elements.get("#interactionState").textContent, /镜头拉近|伸手触碰|靠近玩耍|短暂僵住|重新靠近|拥抱|亲吻|闹脾气|一起玩游戏|一起待在房间/);
 
 console.log("Runtime smoke checks passed.");
