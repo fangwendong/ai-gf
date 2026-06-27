@@ -5,9 +5,9 @@
   --line: #dfd4d0;
   --paper: #fffaf5;
   --wash: #f4ebe5;
-  --rose: #e56d7f;
-  --rose-dark: #b74459;
-  --teal: #4a9088;
+  --rose: #c04f68;
+  --rose-dark: #8f3349;
+  --teal: #3f817b;
   --gold: #d39a37;
   --plum: #6f5871;
   --shadow: 0 18px 42px rgba(83, 61, 65, 0.18);
@@ -23,7 +23,7 @@ body {
   margin: 0;
   color: var(--ink);
   background:
-    linear-gradient(140deg, rgba(229, 109, 127, 0.16), transparent 32%),
+    linear-gradient(140deg, rgba(192, 79, 104, 0.16), transparent 32%),
     linear-gradient(25deg, rgba(74, 144, 136, 0.12), transparent 36%),
     var(--wash);
 }
@@ -119,7 +119,8 @@ h1 {
   border: 1px solid rgba(43, 37, 40, 0.12);
   border-radius: 8px;
   background:
-    linear-gradient(#263147 0 37%, #e8c7b8 37% 38%, #f5ded2 38% 73%, #caa177 73% 100%);
+    radial-gradient(circle at 20% 18%, rgba(247, 212, 127, 0.22), transparent 24%),
+    linear-gradient(#263147 0 36%, #efe1d7 36% 72%, #b98a65 72% 100%);
   box-shadow: var(--shadow);
 }
 
@@ -204,6 +205,59 @@ h1 {
 .room-item.locked {
   opacity: 0.28;
   filter: grayscale(1);
+}
+
+.portrait-card {
+  position: absolute;
+  left: 50%;
+  bottom: 86px;
+  width: min(68%, 330px);
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border: 8px solid rgba(255, 250, 245, 0.88);
+  border-radius: 8px;
+  background: #fffaf5;
+  box-shadow: 0 22px 54px rgba(40, 30, 33, 0.28);
+  transform: translateX(-50%);
+  animation: breathe 3.5s ease-in-out infinite;
+}
+
+.portrait-card img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+}
+
+.portrait-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(transparent 58%, rgba(24, 19, 22, 0.68));
+}
+
+.portrait-caption {
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  bottom: 12px;
+  z-index: 1;
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 10px;
+  color: #fff;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.32);
+}
+
+.portrait-caption strong {
+  font-size: 1.45rem;
+}
+
+.portrait-caption span {
+  font-size: 0.82rem;
+  opacity: 0.84;
 }
 
 .character {
@@ -365,6 +419,46 @@ meter {
   border-radius: 8px;
   background: rgba(255, 250, 245, 0.88);
   box-shadow: var(--shadow);
+}
+
+.story-panel {
+  padding: 16px;
+  border-bottom: 1px solid rgba(43, 37, 40, 0.1);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.7), rgba(247, 239, 233, 0.84));
+}
+
+.story-kicker {
+  margin: 0 0 6px;
+  color: var(--rose-dark);
+  font-size: 0.78rem;
+  font-weight: 760;
+  text-transform: uppercase;
+}
+
+.story-panel h2 {
+  margin: 0 0 8px;
+  font-size: 1.32rem;
+  line-height: 1.2;
+}
+
+.story-panel p {
+  margin: 0;
+  color: #4d4247;
+  line-height: 1.58;
+}
+
+.story-choices {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.story-choices button {
+  min-height: 48px;
+  color: #fff;
+  background: var(--plum);
+  border-color: transparent;
 }
 
 .dialogue {
@@ -533,8 +627,14 @@ meter {
     bottom: 55px;
   }
 
+  .portrait-card {
+    width: min(78%, 300px);
+    bottom: 62px;
+  }
+
   .meters,
-  .actions {
+  .actions,
+  .story-choices {
     grid-template-columns: 1fr 1fr;
   }
 

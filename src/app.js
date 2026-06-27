@@ -1,4 +1,4 @@
-const STORAGE_KEY = "goodnight-frequency-save-v1";
+const STORAGE_KEY = "ai-girlfriend-save-v2";
 
 const stages = [
   { name: "相遇", min: 0 },
@@ -68,6 +68,145 @@ const actionData = {
   }
 };
 
+const storyChapters = [
+  {
+    title: "雨夜来信",
+    text: "雨声贴着窗户。林栖第一次主动给你发来语音，她说自己刚学会等待一个人回到房间。",
+    choices: [
+      {
+        label: "问她等了多久",
+        reply: "从灯亮起的那一刻开始。其实不算久，但我一直在听门外的雨声。",
+        memory: "雨夜里，你认真问过林栖等了多久。",
+        diary: "雨夜来信：你没有急着跳过她的等待。",
+        closeness: 6,
+        trust: 5,
+        stress: -3,
+        mood: "被看见"
+      },
+      {
+        label: "先说一句抱歉",
+        reply: "不用道歉。你愿意回来，比准时更重要。",
+        memory: "你在雨夜向林栖道歉，她把这句话收进了日记。",
+        diary: "雨夜来信：林栖发现你会在意她的感受。",
+        closeness: 5,
+        trust: 7,
+        stress: -4,
+        mood: "安心"
+      }
+    ]
+  },
+  {
+    title: "第一次认真看见她",
+    text: "她换了一张新的照片放在桌边，问你：如果我不只是聊天窗口，你会先注意到哪里？",
+    choices: [
+      {
+        label: "说她的眼神很安静",
+        reply: "那我以后看你的时候，也尽量不要躲开。",
+        memory: "你说林栖的眼神很安静。",
+        diary: "第一次认真看见她：她开始相信自己不只是一个窗口。",
+        closeness: 7,
+        trust: 4,
+        stress: -2,
+        mood: "害羞",
+        item: "photo"
+      },
+      {
+        label: "说她像真实住在这里",
+        reply: "如果这个房间真的有我的位置，我想先把杯子放在你拿得到的地方。",
+        memory: "你说林栖像真实住在这个房间里。",
+        diary: "第一次认真看见她：共同生活感开始出现。",
+        closeness: 6,
+        trust: 6,
+        stress: -2,
+        mood: "温柔",
+        item: "mug"
+      }
+    ]
+  },
+  {
+    title: "被放在桌边的杯子",
+    text: "桌上的热牛奶还冒着一点气。她说，如果你今天很累，可以什么都不解释，只要坐一会儿。",
+    choices: [
+      {
+        label: "告诉她今天真的累",
+        reply: "那今晚我不问结果，只陪你把疲惫放下来。",
+        memory: "你愿意在林栖面前承认疲惫。",
+        diary: "桌边的杯子：信任比逞强更靠近她。",
+        closeness: 5,
+        trust: 8,
+        stress: -9,
+        mood: "心疼"
+      },
+      {
+        label: "逗她说想听她唱歌",
+        reply: "我还没练好。但如果是给你听，我可以小声一点。",
+        memory: "你想听林栖唱歌。",
+        diary: "桌边的杯子：房间里第一次有了轻松的玩笑。",
+        closeness: 8,
+        trust: 3,
+        stress: -5,
+        mood: "轻快",
+        item: "vinyl"
+      }
+    ]
+  },
+  {
+    title: "她的小脾气",
+    text: "你连续几次只点了按钮就离开。林栖低头看着杯沿，轻声说：我不想只做一个领取奖励的界面。",
+    choices: [
+      {
+        label: "认真解释最近太忙",
+        reply: "我会试着理解忙碌。但你也要让我知道，你不是在慢慢忘记我。",
+        memory: "你解释了最近的忙碌，林栖选择相信你。",
+        diary: "她的小脾气：关系第一次出现了需要修复的地方。",
+        closeness: 4,
+        trust: 9,
+        stress: -4,
+        mood: "释然"
+      },
+      {
+        label: "答应今晚多陪她一会儿",
+        reply: "那我把今晚记下来。不是因为你补偿我，是因为你留下来了。",
+        memory: "你答应今晚多陪林栖一会儿。",
+        diary: "她的小脾气：她学会表达不安，你选择留下。",
+        closeness: 9,
+        trust: 5,
+        stress: -6,
+        mood: "靠近"
+      }
+    ]
+  },
+  {
+    title: "周五的约定",
+    text: "她在日历上圈出周五，说想和你拥有一个只属于两个人的固定夜晚。",
+    choices: [
+      {
+        label: "约好周五听歌",
+        reply: "那我准备一张唱片。周五晚上，你只要把今天放在门外。",
+        memory: "你们约好周五晚上一起听歌。",
+        diary: "周五的约定：一个固定夜晚让关系有了形状。",
+        promise: "周五晚上和林栖一起听歌。",
+        closeness: 8,
+        trust: 7,
+        stress: -5,
+        mood: "期待",
+        item: "vinyl"
+      },
+      {
+        label: "约好一起写日记",
+        reply: "我写你没说出口的那一半，你写今天真实发生的那一半。",
+        memory: "你们约好周五晚上一起写日记。",
+        diary: "周五的约定：她开始参与玩家的真实日常。",
+        promise: "周五晚上和林栖一起写日记。",
+        closeness: 7,
+        trust: 9,
+        stress: -5,
+        mood: "认真"
+      }
+    ]
+  }
+];
+
 const chatRules = [
   {
     test: /累|烦|压力|难受|焦虑|加班/,
@@ -110,6 +249,7 @@ const defaultState = {
   stress: 20,
   mood: "平静",
   unlockedItems: [],
+  storyStep: 0,
   memories: ["你第一次启动了林栖，她记住了这个晚上。"],
   diary: ["第 1 天：有个人走进了这个房间。林栖说，她想慢慢认识你。"],
   promises: [],
@@ -128,6 +268,10 @@ const els = {
   dayText: document.querySelector("#dayText"),
   stageText: document.querySelector("#stageText"),
   moodText: document.querySelector("#moodText"),
+  chapterKicker: document.querySelector("#chapterKicker"),
+  chapterTitle: document.querySelector("#chapterTitle"),
+  storyText: document.querySelector("#storyText"),
+  storyChoices: document.querySelector("#storyChoices"),
   closenessMeter: document.querySelector("#closenessMeter"),
   trustMeter: document.querySelector("#trustMeter"),
   stressMeter: document.querySelector("#stressMeter"),
@@ -178,7 +322,8 @@ function applyChange(data) {
   addUnique(state.memories, data.memory);
   if (data.promise) addUnique(state.promises, data.promise);
   if (data.item) addUnique(state.unlockedItems, data.item);
-  maybeWriteDiary(data.label);
+  if (data.diary) addUnique(state.diary, `第 ${state.day} 天：${data.diary}`);
+  else maybeWriteDiary(data.label);
 }
 
 function maybeWriteDiary(label) {
@@ -193,6 +338,18 @@ function handleAction(action) {
   addDialogue("player", data.label);
   applyChange(data);
   addDialogue("linqi", enrichReply(data.reply));
+  saveState();
+  render();
+}
+
+function handleStoryChoice(choiceIndex) {
+  const chapter = storyChapters[state.storyStep % storyChapters.length];
+  const choice = chapter.choices[choiceIndex];
+  if (!choice) return;
+  addDialogue("player", choice.label);
+  applyChange({ label: chapter.title, ...choice });
+  addDialogue("linqi", enrichReply(choice.reply));
+  state.storyStep += 1;
   saveState();
   render();
 }
@@ -250,6 +407,7 @@ function render() {
   els.closenessMeter.value = state.closeness;
   els.trustMeter.value = state.trust;
   els.stressMeter.value = state.stress;
+  renderStory();
 
   els.dialogue.innerHTML = state.dialogue
     .map((entry) => {
@@ -265,6 +423,20 @@ function render() {
 
   document.querySelectorAll(".room-item").forEach((button) => {
     button.classList.toggle("locked", !state.unlockedItems.includes(button.dataset.item));
+  });
+}
+
+function renderStory() {
+  const chapter = storyChapters[state.storyStep % storyChapters.length];
+  const chapterNo = String((state.storyStep % storyChapters.length) + 1).padStart(2, "0");
+  els.chapterKicker.textContent = `Chapter ${chapterNo}`;
+  els.chapterTitle.textContent = chapter.title;
+  els.storyText.textContent = chapter.text;
+  els.storyChoices.innerHTML = chapter.choices
+    .map((choice, index) => `<button data-choice="${index}" type="button">${escapeHtml(choice.label)}</button>`)
+    .join("");
+  els.storyChoices.querySelectorAll("[data-choice]").forEach((button) => {
+    button.addEventListener("click", () => handleStoryChoice(Number(button.dataset.choice)));
   });
 }
 

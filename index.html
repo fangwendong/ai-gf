@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-    <meta name="theme-color" content="#e56d7f">
-    <title>晚安频率</title>
+    <meta name="theme-color" content="#c04f68">
+    <title>AI女友</title>
     <link rel="manifest" href="manifest.webmanifest">
     <link rel="stylesheet" href="src/styles.css">
   </head>
@@ -12,8 +12,8 @@
     <div class="app-shell">
       <header class="topbar">
         <div>
-          <p class="eyebrow">AI Companion Game</p>
-          <h1>晚安频率</h1>
+          <p class="eyebrow">Story Companion Game</p>
+          <h1>AI女友</h1>
         </div>
         <div class="status-strip" aria-label="关系状态">
           <span id="dayText">第 1 天</span>
@@ -36,17 +36,12 @@
               <button class="room-item locked" data-item="mug" type="button" aria-label="热牛奶">☕</button>
               <button class="room-item locked" data-item="photo" type="button" aria-label="合照">□</button>
             </div>
-            <div class="character" id="character" aria-label="林栖">
-              <div class="hair"></div>
-              <div class="face">
-                <span class="eye left"></span>
-                <span class="eye right"></span>
-                <span class="mouth"></span>
+            <div class="portrait-card" aria-label="林栖照片">
+              <img src="assets/girlfriend-portrait.jpg" alt="林栖">
+              <div class="portrait-caption">
+                <strong>林栖</strong>
+                <span>22:41 在线</span>
               </div>
-              <div class="neck"></div>
-              <div class="body"></div>
-              <div class="arm left-arm"></div>
-              <div class="arm right-arm"></div>
             </div>
             <div class="desk">
               <span class="lamp"></span>
@@ -71,6 +66,13 @@
         </section>
 
         <section class="interaction-panel" aria-label="互动">
+          <div class="story-panel" aria-label="剧情章节">
+            <p class="story-kicker" id="chapterKicker">Chapter 01</p>
+            <h2 id="chapterTitle">雨夜来信</h2>
+            <p id="storyText"></p>
+            <div class="story-choices" id="storyChoices"></div>
+          </div>
+
           <div class="dialogue" id="dialogue" aria-live="polite"></div>
 
           <form class="chat-form" id="chatForm">

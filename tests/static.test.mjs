@@ -12,6 +12,8 @@ const requiredFiles = [
   "manifest.webmanifest",
   "sw.js",
   "assets/icon.svg",
+  "assets/girlfriend-portrait.jpg",
+  "docs/ASSETS.md",
   "docs/GDD.md"
 ];
 
@@ -29,7 +31,10 @@ const [html, css, js, manifest, sw, gdd] = await Promise.all([
 ]);
 
 assert.match(html, /<main class="game-layout">/, "main game layout is present");
+assert.match(html, /<title>AI女友<\/title>/, "game title is AI女友");
 assert.match(html, /id="chatForm"/, "chat form exists");
+assert.match(html, /id="storyChoices"/, "story choices exist");
+assert.match(html, /girlfriend-portrait\.jpg/, "portrait asset is used");
 assert.match(html, /data-action="night"/, "night action exists");
 assert.match(html, /rel="manifest"/, "manifest is linked");
 assert.match(css, /\.character/, "character visual exists");
@@ -38,6 +43,7 @@ assert.match(js, /localStorage/, "save system uses localStorage");
 assert.match(js, /serviceWorker/, "service worker registration exists");
 assert.match(js, /const actionData = {/, "action data exists");
 assert.match(js, /const chatRules = \[/, "chat rules exist");
+assert.match(js, /const storyChapters = \[/, "story chapters exist");
 assert.match(sw, /CACHE_NAME/, "service worker cache exists");
 assert.equal(JSON.parse(manifest).display, "standalone", "manifest is installable");
 assert.equal(JSON.parse(manifest).icons.length > 0, true, "manifest has an icon");
