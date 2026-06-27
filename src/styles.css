@@ -304,6 +304,17 @@ h1 {
   line-height: 1.18;
 }
 
+.chapter-goal {
+  display: inline-block;
+  margin: 0 0 10px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  color: var(--gold);
+  background: rgba(255, 248, 243, 0.08);
+  font-size: 0.82rem;
+  letter-spacing: 0;
+}
+
 .story-panel p {
   margin: 0;
   color: var(--muted);

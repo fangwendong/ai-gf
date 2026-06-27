@@ -71,6 +71,7 @@ const ids = [
   "interactionState",
   "chapterKicker",
   "chapterTitle",
+  "chapterGoal",
   "storyText",
   "storyChoices",
   "openPanelButton",
@@ -142,6 +143,7 @@ globalThis.document = {
 await import("../src/app.js");
 
 assert.equal(elements.get("#chapterTitle").textContent, "雨夜来信");
+assert.match(elements.get("#chapterGoal").textContent, /本幕目标/);
 assert.match(elements.get("#dialogue").innerHTML, /林栖/);
 
 actions.find((action) => action.dataset.action === "talk").click();
@@ -153,7 +155,7 @@ assert.equal(elements.get("#interactionState").textContent, "拥抱");
 
 elements.get("#storyChoices").children[0].click();
 assert.notEqual(elements.get("#chapterTitle").textContent, "雨夜来信");
-assert.match(elements.get("#dialogue").innerHTML, /问她等了多久|抱一下/);
+assert.match(elements.get("#dialogue").innerHTML, /雨伞|等|坐到她旁边|杯子|听歌|不高兴|周五/);
 
 elements.get("#openPanelButton").click();
 assert.equal(elements.get("#memoryPanel").classList.contains("collapsed"), false);
