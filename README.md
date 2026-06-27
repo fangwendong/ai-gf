@@ -35,6 +35,8 @@ node tests/static.test.mjs
 - 日记、约定、回忆、房间物品解锁
 - `localStorage` 自动存档
 - Service Worker 离线缓存
+- 2D 游戏规格文档：`docs/2D_GAME_SPEC.md`
+- 运行时烟测：模拟剧情选择和双人互动点击
 
 ## 后续方向
 

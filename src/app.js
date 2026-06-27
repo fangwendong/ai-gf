@@ -311,7 +311,6 @@ const els = {
   stageText: document.querySelector("#stageText"),
   moodText: document.querySelector("#moodText"),
   portraitCard: document.querySelector("#portraitCard"),
-  portraitMood: document.querySelector("#portraitMood"),
   interactionState: document.querySelector("#interactionState"),
   chapterKicker: document.querySelector("#chapterKicker"),
   chapterTitle: document.querySelector("#chapterTitle"),
@@ -450,7 +449,6 @@ function render() {
   els.dayText.textContent = `第 ${state.day} 天`;
   els.stageText.textContent = currentStage().name;
   els.moodText.textContent = state.mood;
-  els.portraitMood.textContent = state.mood;
   setPortraitMood(state.mood);
   setRelationScene(state.relationScene);
   els.closenessMeter.value = state.closeness;

@@ -68,7 +68,6 @@ const ids = [
   "stageText",
   "moodText",
   "portraitCard",
-  "portraitMood",
   "interactionState",
   "chapterKicker",
   "chapterTitle",

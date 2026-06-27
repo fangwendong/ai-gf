@@ -10,51 +10,63 @@
   </head>
   <body>
     <div class="app-shell">
-      <header class="topbar">
-        <div>
-          <p class="eyebrow">Story Companion Game</p>
-          <h1>AI女友</h1>
-        </div>
-        <div class="status-strip" aria-label="关系状态">
-          <span id="dayText">第 1 天</span>
-          <span id="stageText">相遇</span>
-          <span id="moodText">平静</span>
-          <span>v0.4 双人2D</span>
-        </div>
-      </header>
-
-      <main class="game-layout">
-        <section class="room-panel" aria-label="共同生活房间">
+      <main class="cinematic-stage" aria-label="AI女友沉浸式游戏">
+        <section class="room-panel" aria-label="沉浸式双人场景">
           <div class="room-scene" id="roomScene">
-            <div class="window">
-              <span class="moon"></span>
-              <span class="star star-a"></span>
-              <span class="star star-b"></span>
-              <span class="star star-c"></span>
-            </div>
-            <div class="shelf">
-              <button class="room-item locked" data-item="vinyl" type="button" aria-label="唱片">♪</button>
-              <button class="room-item locked" data-item="mug" type="button" aria-label="热牛奶">☕</button>
-              <button class="room-item locked" data-item="photo" type="button" aria-label="合照">□</button>
-            </div>
             <div class="portrait-card mood-calm scene-together" id="portraitCard" aria-label="2D 双人动态场景">
               <img src="assets/couple-main.png" alt="2D 男主和林栖">
               <span class="blink blink-left"></span>
               <span class="blink blink-right"></span>
               <span class="emotion-aura"></span>
               <span class="motion-light"></span>
-              <span class="interaction-state" id="interactionState">一起待在房间</span>
-              <div class="portrait-caption">
-                <strong>林栖 & 你</strong>
-                <span id="portraitMood">平静</span>
-              </div>
-            </div>
-            <div class="desk">
-              <span class="lamp"></span>
-              <span class="book"></span>
             </div>
           </div>
+        </section>
 
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">v0.5 Immersive VN</p>
+            <h1>AI女友</h1>
+          </div>
+          <div class="status-strip" aria-label="关系状态">
+            <span id="dayText">第 1 天</span>
+            <span id="stageText">相遇</span>
+            <span id="moodText">平静</span>
+            <span id="interactionState">一起待在房间</span>
+          </div>
+        </header>
+
+        <section class="story-panel" aria-label="剧情章节">
+          <p class="story-kicker" id="chapterKicker">Chapter 01</p>
+          <h2 id="chapterTitle">雨夜来信</h2>
+          <p id="storyText"></p>
+          <div class="story-choices" id="storyChoices"></div>
+        </section>
+
+        <section class="interaction-panel" aria-label="对白与互动">
+          <div class="dialogue" id="dialogue" aria-live="polite"></div>
+
+          <form class="chat-form" id="chatForm">
+            <label class="sr-only" for="chatInput">和林栖说话</label>
+            <input id="chatInput" maxlength="80" autocomplete="off" placeholder="对林栖说一句话">
+            <button type="submit">发送</button>
+          </form>
+
+          <div class="actions" aria-label="双人互动">
+            <button data-action="hug" type="button">拥抱</button>
+            <button data-action="kiss" type="button">亲吻</button>
+            <button data-action="sulk" type="button">闹脾气</button>
+            <button data-action="game" type="button">玩游戏</button>
+            <button data-action="music" type="button">听歌</button>
+            <button data-action="night" type="button">晚安</button>
+            <button data-action="morning" type="button">早安</button>
+            <button data-action="stress" type="button">有点累</button>
+            <button data-action="promise" type="button">做约定</button>
+            <button data-action="gift" type="button">送礼物</button>
+          </div>
+        </section>
+
+        <aside class="memory-panel" aria-label="关系记录">
           <div class="meters">
             <div>
               <span>亲密</span>
@@ -69,39 +81,6 @@
               <meter id="stressMeter" min="0" max="100" value="20"></meter>
             </div>
           </div>
-        </section>
-
-        <section class="interaction-panel" aria-label="互动">
-          <div class="story-panel" aria-label="剧情章节">
-            <p class="story-kicker" id="chapterKicker">Chapter 01</p>
-            <h2 id="chapterTitle">雨夜来信</h2>
-            <p id="storyText"></p>
-            <div class="story-choices" id="storyChoices"></div>
-          </div>
-
-          <div class="dialogue" id="dialogue" aria-live="polite"></div>
-
-          <form class="chat-form" id="chatForm">
-            <label class="sr-only" for="chatInput">和林栖说话</label>
-            <input id="chatInput" maxlength="80" autocomplete="off" placeholder="输入一句话，例如：今天有点累">
-            <button type="submit">发送</button>
-          </form>
-
-          <div class="actions" aria-label="陪伴行动">
-            <button data-action="morning" type="button">早安</button>
-            <button data-action="night" type="button">晚安</button>
-            <button data-action="stress" type="button">有点累</button>
-            <button data-action="music" type="button">听歌</button>
-            <button data-action="promise" type="button">做约定</button>
-            <button data-action="gift" type="button">送礼物</button>
-            <button data-action="hug" type="button">拥抱</button>
-            <button data-action="kiss" type="button">亲吻</button>
-            <button data-action="sulk" type="button">闹脾气</button>
-            <button data-action="game" type="button">玩游戏</button>
-          </div>
-        </section>
-
-        <aside class="memory-panel" aria-label="记忆与日记">
           <nav class="tabs" aria-label="信息页签">
             <button class="active" data-tab="memories" type="button">记忆</button>
             <button data-tab="diary" type="button">日记</button>
