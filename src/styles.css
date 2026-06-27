@@ -86,9 +86,9 @@ button:disabled {
 }
 
 .hud-top {
-  top: max(16px, env(safe-area-inset-top));
-  left: max(16px, env(safe-area-inset-left));
-  right: max(16px, env(safe-area-inset-right));
+  top: max(12px, env(safe-area-inset-top));
+  left: max(12px, env(safe-area-inset-left));
+  right: max(12px, env(safe-area-inset-right));
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
@@ -96,13 +96,13 @@ button:disabled {
 }
 
 .brand {
-  max-width: min(58vw, 460px);
+  max-width: min(40vw, 340px);
 }
 
 .eyebrow {
   margin: 0 0 4px;
   color: var(--gold);
-  font-size: 0.74rem;
+  font-size: 0.68rem;
   font-weight: 800;
   letter-spacing: 0;
   text-transform: uppercase;
@@ -110,21 +110,22 @@ button:disabled {
 
 h1 {
   margin: 0;
-  font-size: clamp(2rem, 6vw, 4.8rem);
-  line-height: 0.92;
+  font-size: clamp(1.4rem, 2.7vw, 2.35rem);
+  line-height: 1;
   letter-spacing: 0;
-  text-shadow: 0 4px 26px rgba(0, 0, 0, 0.44);
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.42);
 }
 
 .objective {
   margin: 8px 0 0;
-  max-width: 36ch;
-  padding: 7px 10px;
+  max-width: 28ch;
+  padding: 6px 9px;
   border: 1px solid rgba(118, 243, 216, 0.2);
   border-radius: 8px;
   background: rgba(13, 17, 28, 0.6);
   color: var(--muted);
-  line-height: 1.45;
+  line-height: 1.35;
+  font-size: 0.92rem;
 }
 
 .status-strip {
@@ -132,44 +133,47 @@ h1 {
   flex-wrap: wrap;
   gap: 8px;
   justify-content: flex-end;
-  max-width: min(48vw, 520px);
+  max-width: min(52vw, 560px);
   margin-top: 4px;
 }
 
 .status-strip span {
-  padding: 7px 10px;
+  padding: 6px 10px;
   border: 1px solid var(--line);
   border-radius: 999px;
   background: rgba(13, 17, 28, 0.68);
   box-shadow: var(--shadow);
   backdrop-filter: blur(12px);
   white-space: nowrap;
+  font-size: 0.9rem;
 }
 
 .hud-actions {
-  top: max(16px, env(safe-area-inset-top));
-  right: max(16px, env(safe-area-inset-right));
+  top: max(12px, env(safe-area-inset-top));
+  right: max(12px, env(safe-area-inset-right));
   display: flex;
   gap: 8px;
   pointer-events: auto;
 }
 
 .hud-actions button {
-  min-width: 84px;
+  min-width: 74px;
+  min-height: 36px;
+  padding: 0 12px;
   background: rgba(13, 17, 28, 0.74);
 }
 
 .prompt-bar {
   position: absolute;
   left: 50%;
-  bottom: max(16px, env(safe-area-inset-bottom));
+  bottom: max(12px, env(safe-area-inset-bottom));
   z-index: 4;
   transform: translateX(-50%);
   display: flex;
   align-items: center;
   gap: 12px;
-  width: min(760px, calc(100vw - 32px));
-  padding: 12px 14px;
+  width: min(640px, calc(100vw - 24px));
+  padding: 10px 12px;
   border: 1px solid rgba(118, 243, 216, 0.16);
   border-radius: 8px;
   background: linear-gradient(180deg, rgba(13, 17, 28, 0.84), rgba(13, 17, 28, 0.64));
@@ -191,7 +195,8 @@ h1 {
 }
 
 .prompt-actions button {
-  min-width: 84px;
+  min-width: 74px;
+  min-height: 36px;
 }
 
 .dialogue-sheet {
@@ -200,8 +205,8 @@ h1 {
   bottom: 92px;
   z-index: 5;
   transform: translateX(-50%);
-  width: min(720px, calc(100vw - 32px));
-  padding: 14px 16px;
+  width: min(660px, calc(100vw - 24px));
+  padding: 12px 14px;
   border: 1px solid rgba(246, 244, 255, 0.14);
   border-radius: 8px;
   background: var(--panel-strong);
@@ -250,8 +255,8 @@ h1 {
   top: 84px;
   right: max(16px, env(safe-area-inset-right));
   z-index: 5;
-  width: min(340px, calc(100vw - 32px));
-  padding: 12px;
+  width: min(300px, calc(100vw - 24px));
+  padding: 10px;
   border: 1px solid rgba(246, 244, 255, 0.14);
   border-radius: 8px;
   background: var(--panel);
@@ -275,7 +280,7 @@ h1 {
 
 .quest-panel h2 {
   margin: 0;
-  font-size: 1rem;
+  font-size: 0.92rem;
 }
 
 .quest-panel ol {
@@ -286,7 +291,8 @@ h1 {
 .quest-panel li {
   margin: 0 0 9px;
   color: var(--muted);
-  line-height: 1.45;
+  line-height: 1.35;
+  font-size: 0.92rem;
 }
 
 .quest-panel li.active {
@@ -394,17 +400,29 @@ h1 {
   }
 
   .dialogue-sheet {
-    width: calc(100vw - 20px);
+    width: calc(100vw - 16px);
     bottom: 96px;
   }
 
   .prompt-bar {
-    width: calc(100vw - 20px);
+    width: calc(100vw - 16px);
     bottom: 12px;
   }
 }
 
 @media (max-width: 560px) {
+  .brand {
+    max-width: none;
+  }
+
+  h1 {
+    font-size: 1.85rem;
+  }
+
+  .objective {
+    max-width: none;
+  }
+
   .prompt-bar {
     align-items: flex-start;
     flex-direction: column;
@@ -431,7 +449,7 @@ h1 {
   }
 
   .hud-actions button {
-    min-width: 72px;
+    min-width: 68px;
     padding: 0 10px;
   }
 }

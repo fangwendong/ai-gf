@@ -863,16 +863,16 @@ function drawQuestGlow(ctx) {
   if (!target || state.dialogueOpen) return;
   const pulse = 1 + Math.sin(performance.now() * 0.005) * 0.05;
   ctx.save();
-  ctx.translate(target.x, target.y - 28);
-  ctx.globalAlpha = 0.6;
-  ctx.fillStyle = "rgba(118,243,216,0.08)";
+  ctx.translate(target.x, target.y - 22);
+  ctx.globalAlpha = 0.85;
+  ctx.fillStyle = "rgba(118,243,216,0.18)";
   ctx.beginPath();
-  ctx.arc(0, 0, target.r * 0.88 * pulse, 0, Math.PI * 2);
+  ctx.arc(0, 0, 10 * pulse, 0, Math.PI * 2);
   ctx.fill();
-  ctx.strokeStyle = "rgba(118,243,216,0.45)";
-  ctx.lineWidth = 1.5;
+  ctx.strokeStyle = "rgba(118,243,216,0.72)";
+  ctx.lineWidth = 1.4;
   ctx.beginPath();
-  ctx.arc(0, 0, target.r * 0.58 * pulse, 0, Math.PI * 2);
+  ctx.arc(0, 0, 16 * pulse, 0, Math.PI * 2);
   ctx.stroke();
   ctx.restore();
 }
@@ -881,24 +881,15 @@ function drawInteractables(ctx) {
   const current = CURRENT_QUEST();
   INTERACTABLES.forEach((item) => {
     const active = item.id === current.targetId;
-    const glow = active ? 0.18 : 0.05;
     ctx.save();
     ctx.translate(item.x, item.y);
-    ctx.fillStyle = `rgba(255,255,255,${glow})`;
+    ctx.globalAlpha = active ? 0.95 : 0.55;
+    ctx.fillStyle = active ? "rgba(118,243,216,0.85)" : "rgba(246,244,255,0.35)";
     ctx.beginPath();
-    ctx.arc(0, 0, item.r, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.strokeStyle = active ? "rgba(118,243,216,0.7)" : "rgba(246,244,255,0.14)";
-    ctx.lineWidth = active ? 2.2 : 1;
-    ctx.beginPath();
-    ctx.arc(0, 0, item.r * 0.52, 0, Math.PI * 2);
-    ctx.stroke();
-    ctx.fillStyle = active ? "rgba(118,243,216,0.85)" : "rgba(246,244,255,0.2)";
-    ctx.beginPath();
-    ctx.moveTo(0, -6);
-    ctx.lineTo(6, 0);
-    ctx.lineTo(0, 6);
-    ctx.lineTo(-6, 0);
+    ctx.moveTo(0, -5);
+    ctx.lineTo(5, 0);
+    ctx.lineTo(0, 5);
+    ctx.lineTo(-5, 0);
     ctx.closePath();
     ctx.fill();
     ctx.restore();
@@ -906,7 +897,7 @@ function drawInteractables(ctx) {
 }
 
 function drawPlayer(ctx, x, y) {
-  if (drawSpriteAtFeet(ctx, ART.heroSprite, x, y, { facing: state.player.facing, height: 220, offsetY: 14 })) return;
+  if (drawSpriteAtFeet(ctx, ART.heroSprite, x, y, { facing: state.player.facing, height: 300, offsetY: 6 })) return;
   drawChibi(ctx, x, y, {
     skin: "#f2c4ad",
     hair: "#1c2238",
@@ -921,7 +912,7 @@ function drawPlayer(ctx, x, y) {
 }
 
 function drawCompanion(ctx, x, y) {
-  if (drawSpriteAtFeet(ctx, ART.linqiSprite, x, y, { facing: state.player.x < x ? -1 : 1, height: 226, offsetY: 14 })) return;
+  if (drawSpriteAtFeet(ctx, ART.linqiSprite, x, y, { facing: state.player.x < x ? -1 : 1, height: 310, offsetY: 6 })) return;
   drawChibi(ctx, x, y, {
     skin: "#f5c4b5",
     hair: "#2e1836",
