@@ -330,7 +330,8 @@ const defaultState = {
     }
   ],
   lastVisit: null,
-  hoverTarget: "把鼠标移到角色上"
+  hoverTarget: "把鼠标移到角色上",
+  dialogueOpen: true
 };
 
 let state = loadState();
@@ -354,13 +355,19 @@ const els = {
   dialogue: document.querySelector("#dialogue"),
   chatForm: document.querySelector("#chatForm"),
   chatInput: document.querySelector("#chatInput"),
+  interactionPanel: document.querySelector(".interaction-panel"),
   openPanelButton: document.querySelector("#openPanelButton"),
   nextSceneButton: document.querySelector("#nextSceneButton"),
+  chatPanelButton: document.querySelector("#chatPanelButton"),
   memoryPanel: document.querySelector("#memoryPanel"),
   memories: document.querySelector("#tab-memories"),
   diary: document.querySelector("#tab-diary"),
   promises: document.querySelector("#tab-promises")
 };
+
+const prefersSceneFirst = window.matchMedia("(max-width: 980px)").matches;
+if (typeof state.dialogueOpen !== "boolean") state.dialogueOpen = true;
+if (prefersSceneFirst) state.dialogueOpen = false;
 
 const sceneBeats = [
   { mode: "together", label: "镜头停在门口", line: "你刚推门进来，她还在看着灯。" },
@@ -430,6 +437,13 @@ function setPanelOpen(open) {
   state.panelOpen = open;
   els.memoryPanel.classList.toggle("collapsed", !open);
   els.openPanelButton.textContent = open ? "收起" : "记录";
+  saveState();
+}
+
+function setDialogueOpen(open) {
+  state.dialogueOpen = open;
+  els.interactionPanel.classList.toggle("chat-collapsed", !open);
+  els.chatPanelButton.textContent = open ? "收起" : "对话";
   saveState();
 }
 
@@ -520,7 +534,9 @@ function render() {
   setPortraitMood(state.mood);
   setRelationScene(state.relationScene);
   els.openPanelButton.textContent = state.panelOpen ? "收起" : "记录";
+  els.chatPanelButton.textContent = state.dialogueOpen ? "收起" : "对话";
   els.memoryPanel.classList.toggle("collapsed", !state.panelOpen);
+  els.interactionPanel.classList.toggle("chat-collapsed", !state.dialogueOpen);
   els.hoverLabel.textContent = state.hoverTarget;
   els.closenessMeter.value = state.closeness;
   els.trustMeter.value = state.trust;
@@ -691,6 +707,7 @@ document.querySelectorAll(".room-item").forEach((button) => {
 
 els.openPanelButton.addEventListener("click", () => setPanelOpen(!state.panelOpen));
 els.nextSceneButton.addEventListener("click", () => advanceScene());
+els.chatPanelButton.addEventListener("click", () => setDialogueOpen(!state.dialogueOpen));
 
 els.chatForm.addEventListener("submit", (event) => {
   event.preventDefault();

@@ -42,6 +42,8 @@ assert.match(html, /id="storyChoices"/, "story choices exist");
 assert.match(html, /id="roomScene"/, "room scene exists");
 assert.match(html, /id="hoverLabel"/, "hover label exists");
 assert.match(html, /id="mouseHint"/, "mouse hint exists");
+assert.match(html, /id="chatPanelButton"/, "chat panel toggle exists");
+assert.match(html, /conversation-stack/, "conversation stack exists");
 assert.match(html, /couple-main\.png/, "2D couple asset is used");
 assert.match(html, /id="interactionState"/, "interaction state exists");
 assert.match(html, /character-hotspots/, "character hotspots exist");

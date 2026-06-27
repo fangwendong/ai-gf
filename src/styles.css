@@ -390,6 +390,19 @@ h1 {
   align-items: end;
 }
 
+.conversation-stack {
+  display: grid;
+  gap: 10px;
+}
+
+.interaction-panel.chat-collapsed {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.interaction-panel.chat-collapsed .conversation-stack {
+  display: none;
+}
+
 .dialogue {
   min-height: 150px;
   max-height: 26vh;
@@ -749,6 +762,10 @@ meter {
     left: 12px;
     right: 12px;
     bottom: 12px;
+    grid-template-columns: 1fr;
+  }
+
+  .interaction-panel.chat-collapsed {
     grid-template-columns: 1fr;
   }
 

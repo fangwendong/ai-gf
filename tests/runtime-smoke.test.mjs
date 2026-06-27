@@ -90,6 +90,7 @@ const ids = [
   "storyText",
   "storyChoices",
   "roomScene",
+  "chatPanelButton",
   "openPanelButton",
   "nextSceneButton",
   "memoryPanel",
@@ -108,6 +109,7 @@ const ids = [
 
 const elements = new Map(ids.map((id) => [`#${id}`, new FakeElement(`#${id}`)]));
 elements.set("#roomScene", new FakeElement("#roomScene"));
+elements.set(".interaction-panel", new FakeElement(".interaction-panel"));
 const actions = ["talk", "morning", "night", "stress", "music", "promise", "gift", "hug", "kiss", "sulk", "game"]
   .map((action) => new FakeElement("[data-action]", { action }));
 const tabs = ["memories", "diary", "promises"].map((tab) => new FakeElement("[data-tab]", { tab }));
@@ -137,6 +139,9 @@ Object.defineProperty(globalThis, "navigator", {
 });
 
 globalThis.window = {
+  matchMedia() {
+    return { matches: true, addEventListener() {}, removeEventListener() {} };
+  },
   location: {
     reload() {
       throw new Error("unexpected reload in smoke test");

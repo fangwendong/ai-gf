@@ -49,6 +49,7 @@
         <div class="hud">
           <button id="openPanelButton" type="button" aria-label="打开关系记录">记录</button>
           <button id="nextSceneButton" type="button" aria-label="推进剧情">继续</button>
+          <button id="chatPanelButton" type="button" aria-label="切换对话面板">对话</button>
         </div>
 
         <section class="story-panel" aria-label="剧情章节">
@@ -60,13 +61,15 @@
         </section>
 
         <section class="interaction-panel" aria-label="对白与互动">
-          <div class="dialogue" id="dialogue" aria-live="polite"></div>
+          <div class="conversation-stack" id="conversationStack">
+            <div class="dialogue" id="dialogue" aria-live="polite"></div>
 
-          <form class="chat-form" id="chatForm">
-            <label class="sr-only" for="chatInput">和林栖说话</label>
-            <input id="chatInput" maxlength="80" autocomplete="off" placeholder="对林栖说一句话">
-            <button type="submit">发送</button>
-          </form>
+            <form class="chat-form" id="chatForm">
+              <label class="sr-only" for="chatInput">和林栖说话</label>
+              <input id="chatInput" maxlength="80" autocomplete="off" placeholder="对林栖说一句话">
+              <button type="submit">发送</button>
+            </form>
+          </div>
 
           <div class="actions" aria-label="双人互动">
             <button data-action="hug" type="button">拥抱</button>
