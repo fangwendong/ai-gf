@@ -15,7 +15,8 @@ const requiredFiles = [
   "assets/linqi-2d.png",
   "assets/couple-main.png",
   "docs/ASSETS.md",
-  "docs/GDD.md"
+  "docs/GDD.md",
+  "tests/runtime-smoke.test.mjs"
 ];
 
 for (const file of requiredFiles) {
@@ -42,6 +43,7 @@ assert.match(html, /data-action="hug"/, "hug action exists");
 assert.match(html, /data-action="kiss"/, "kiss action exists");
 assert.match(html, /data-action="sulk"/, "sulk action exists");
 assert.match(html, /data-action="game"/, "game action exists");
+assert.match(html, /v0\.4 双人2D/, "visible version badge exists");
 assert.match(html, /data-action="night"/, "night action exists");
 assert.match(html, /rel="manifest"/, "manifest is linked");
 assert.match(css, /\.character/, "character visual exists");
@@ -56,6 +58,8 @@ assert.match(js, /const storyChapters = \[/, "story chapters exist");
 assert.match(js, /scene: "hug"/, "hug scene exists");
 assert.match(js, /scene: "kiss"/, "kiss scene exists");
 assert.match(sw, /CACHE_NAME/, "service worker cache exists");
+assert.match(sw, /skipWaiting/, "service worker activates updates quickly");
+assert.match(sw, /request\.mode === "navigate"/, "navigation is network-first");
 assert.equal(JSON.parse(manifest).display, "standalone", "manifest is installable");
 assert.equal(JSON.parse(manifest).icons.length > 0, true, "manifest has an icon");
 assert.match(gdd, /MVP 验收标准/, "GDD includes acceptance criteria");

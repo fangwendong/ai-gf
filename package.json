@@ -6,6 +6,6 @@
   "type": "module",
   "scripts": {
     "start": "python3 -m http.server 4173",
-    "test": "node tests/static.test.mjs"
+    "test": "node tests/static.test.mjs && node tests/runtime-smoke.test.mjs"
   }
 }
