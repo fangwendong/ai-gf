@@ -14,6 +14,10 @@ const requiredFiles = [
   "assets/icon.svg",
   "assets/linqi-2d.png",
   "assets/couple-main.png",
+  "assets/hero-2d.png",
+  "assets/bg-apartment.png",
+  "assets/bg-street.png",
+  "assets/bg-park.png",
   "docs/ASSETS.md",
   "docs/GDD.md",
   "docs/2D_GAME_SPEC.md",
@@ -65,7 +69,7 @@ assert.match(js, /function drawPlayer\(/, "player renderer exists");
 assert.match(js, /window\.__aiGfDebug/, "debug hook exists");
 
 assert.match(sw, /CACHE_NAME/, "service worker cache exists");
-assert.match(sw, /ai-gf-v13/, "service worker cache version is current");
+assert.match(sw, /ai-gf-v14/, "service worker cache version is current");
 assert.match(sw, /skipWaiting/, "service worker activates updates quickly");
 
 assert.equal(JSON.parse(manifest).display, "standalone", "manifest is installable");

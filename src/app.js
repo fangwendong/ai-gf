@@ -74,6 +74,14 @@ const COLORS = {
   park: ["#11351f", "#0b1c12", "#8df0d3"]
 };
 
+const ART = {
+  apartmentBg: loadImage("./assets/bg-apartment.png"),
+  streetBg: loadImage("./assets/bg-street.png"),
+  parkBg: loadImage("./assets/bg-park.png"),
+  heroSprite: loadImage("./assets/hero-2d.png"),
+  linqiSprite: loadImage("./assets/linqi-2d.png")
+};
+
 const defaultState = {
   questIndex: 0,
   bond: 0,
@@ -154,6 +162,44 @@ function createFallbackContext(canvasNode) {
       return true;
     }
   });
+}
+
+function loadImage(src) {
+  if (typeof Image === "undefined") return null;
+  const image = new Image();
+  image.decoding = "async";
+  image.src = src;
+  return image;
+}
+
+function imageReady(image) {
+  return Boolean(image && image.complete && image.naturalWidth > 0);
+}
+
+function drawImageCover(ctx, image, x, y, w, h, focusX = 0.5, focusY = 0.5) {
+  if (!imageReady(image)) return false;
+  const scale = Math.max(w / image.naturalWidth, h / image.naturalHeight);
+  const sw = w / scale;
+  const sh = h / scale;
+  const sx = (image.naturalWidth - sw) * focusX;
+  const sy = (image.naturalHeight - sh) * focusY;
+  ctx.drawImage(image, sx, sy, sw, sh, x, y, w, h);
+  return true;
+}
+
+function drawSpriteAtFeet(ctx, image, x, y, { facing = 1, height = 240, offsetY = 0 } = {}) {
+  if (!imageReady(image)) return false;
+  const scale = height / image.naturalHeight;
+  const width = image.naturalWidth * scale;
+  ctx.save();
+  ctx.translate(x, y + offsetY);
+  ctx.scale(facing, 1);
+  ctx.shadowColor = "rgba(0, 0, 0, 0.22)";
+  ctx.shadowBlur = 16;
+  ctx.shadowOffsetY = 10;
+  ctx.drawImage(image, -width / 2, -height, width, height);
+  ctx.restore();
+  return true;
 }
 
 function loadState() {
@@ -502,11 +548,11 @@ function updateMovement(dt) {
 
   resolvePlayerCollision();
 
-  const followDistance = state.bond >= 3 ? 26 : 38;
+  const followDistance = state.bond >= 3 ? 72 : 94;
   const followX = state.player.x - state.player.facing * followDistance;
-  const followY = state.player.y + 6;
-  state.companion.x += (followX - state.companion.x) * 0.08;
-  state.companion.y += (followY - state.companion.y) * 0.08;
+  const followY = state.player.y + 10;
+  state.companion.x += (followX - state.companion.x) * 0.1;
+  state.companion.y += (followY - state.companion.y) * 0.1;
 
   const cameraTargetX = clamp(state.player.x - sceneW * 0.5 + state.player.facing * 22, 0, WORLD.width - sceneW);
   const cameraTargetY = clamp(state.player.y - sceneH * 0.55, 0, WORLD.height - sceneH);
@@ -602,6 +648,7 @@ function drawWorld(ctx) {
 }
 
 function drawApartment(ctx) {
+  if (drawImageCover(ctx, ART.apartmentBg, 0, 0, 1050, 800, 0.5, 0.52)) return;
   const base = ctx.createLinearGradient(0, 0, 1050, 800);
   base.addColorStop(0, "#1b2236");
   base.addColorStop(0.55, "#12192a");
@@ -670,6 +717,7 @@ function drawApartment(ctx) {
 }
 
 function drawStreet(ctx) {
+  if (drawImageCover(ctx, ART.streetBg, 1050, 0, 1100, 800, 0.5, 0.55)) return;
   const bg = ctx.createLinearGradient(1050, 0, 2150, 0);
   bg.addColorStop(0, "#121a2f");
   bg.addColorStop(0.5, "#18223b");
@@ -734,6 +782,7 @@ function drawStreet(ctx) {
 }
 
 function drawPark(ctx) {
+  if (drawImageCover(ctx, ART.parkBg, 0, 800, WORLD.width, 800, 0.55, 0.45)) return;
   const grass = ctx.createLinearGradient(0, 800, 3200, 1600);
   grass.addColorStop(0, "#14341f");
   grass.addColorStop(1, "#0d1f15");
@@ -812,18 +861,18 @@ function drawDecor(ctx) {
 function drawQuestGlow(ctx) {
   const target = currentQuestTarget();
   if (!target || state.dialogueOpen) return;
-  const pulse = 1 + Math.sin(performance.now() * 0.005) * 0.08;
+  const pulse = 1 + Math.sin(performance.now() * 0.005) * 0.05;
   ctx.save();
   ctx.translate(target.x, target.y - 28);
-  ctx.globalAlpha = 0.9;
-  ctx.fillStyle = "rgba(118,243,216,0.16)";
+  ctx.globalAlpha = 0.6;
+  ctx.fillStyle = "rgba(118,243,216,0.08)";
   ctx.beginPath();
-  ctx.arc(0, 0, target.r * pulse, 0, Math.PI * 2);
+  ctx.arc(0, 0, target.r * 0.88 * pulse, 0, Math.PI * 2);
   ctx.fill();
-  ctx.strokeStyle = "rgba(118,243,216,0.82)";
-  ctx.lineWidth = 2;
+  ctx.strokeStyle = "rgba(118,243,216,0.45)";
+  ctx.lineWidth = 1.5;
   ctx.beginPath();
-  ctx.arc(0, 0, target.r * 0.72 * pulse, 0, Math.PI * 2);
+  ctx.arc(0, 0, target.r * 0.58 * pulse, 0, Math.PI * 2);
   ctx.stroke();
   ctx.restore();
 }
@@ -832,37 +881,32 @@ function drawInteractables(ctx) {
   const current = CURRENT_QUEST();
   INTERACTABLES.forEach((item) => {
     const active = item.id === current.targetId;
-    const glow = active ? 0.34 : 0.09;
+    const glow = active ? 0.18 : 0.05;
     ctx.save();
     ctx.translate(item.x, item.y);
     ctx.fillStyle = `rgba(255,255,255,${glow})`;
     ctx.beginPath();
     ctx.arc(0, 0, item.r, 0, Math.PI * 2);
     ctx.fill();
-    ctx.strokeStyle = active ? "rgba(118,243,216,0.9)" : "rgba(246,244,255,0.22)";
-    ctx.lineWidth = active ? 3 : 1.25;
+    ctx.strokeStyle = active ? "rgba(118,243,216,0.7)" : "rgba(246,244,255,0.14)";
+    ctx.lineWidth = active ? 2.2 : 1;
     ctx.beginPath();
-    ctx.arc(0, 0, item.r * 0.72, 0, Math.PI * 2);
+    ctx.arc(0, 0, item.r * 0.52, 0, Math.PI * 2);
     ctx.stroke();
-    ctx.fillStyle = active ? "rgba(118,243,216,0.95)" : "rgba(246,244,255,0.26)";
+    ctx.fillStyle = active ? "rgba(118,243,216,0.85)" : "rgba(246,244,255,0.2)";
     ctx.beginPath();
-    ctx.moveTo(0, -8);
-    ctx.lineTo(8, 0);
-    ctx.lineTo(0, 8);
-    ctx.lineTo(-8, 0);
+    ctx.moveTo(0, -6);
+    ctx.lineTo(6, 0);
+    ctx.lineTo(0, 6);
+    ctx.lineTo(-6, 0);
     ctx.closePath();
     ctx.fill();
-    if (active) {
-      ctx.fillStyle = "#fff8f3";
-      ctx.font = "600 12px Inter, sans-serif";
-      ctx.textAlign = "center";
-      ctx.fillText(item.label, 0, -item.r - 16);
-    }
     ctx.restore();
   });
 }
 
 function drawPlayer(ctx, x, y) {
+  if (drawSpriteAtFeet(ctx, ART.heroSprite, x, y, { facing: state.player.facing, height: 220, offsetY: 14 })) return;
   drawChibi(ctx, x, y, {
     skin: "#f2c4ad",
     hair: "#1c2238",
@@ -877,6 +921,7 @@ function drawPlayer(ctx, x, y) {
 }
 
 function drawCompanion(ctx, x, y) {
+  if (drawSpriteAtFeet(ctx, ART.linqiSprite, x, y, { facing: state.player.x < x ? -1 : 1, height: 226, offsetY: 14 })) return;
   drawChibi(ctx, x, y, {
     skin: "#f5c4b5",
     hair: "#2e1836",

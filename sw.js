@@ -1,4 +1,4 @@
-const CACHE_NAME = "ai-gf-v13";
+const CACHE_NAME = "ai-gf-v14";
 const ASSETS = [
   "./",
   "./index.html",
@@ -6,6 +6,10 @@ const ASSETS = [
   "./assets/icon.svg",
   "./assets/linqi-2d.png",
   "./assets/couple-main.png",
+  "./assets/hero-2d.png",
+  "./assets/bg-apartment.png",
+  "./assets/bg-street.png",
+  "./assets/bg-park.png",
   "./src/styles.css",
   "./src/app.js"
 ];
