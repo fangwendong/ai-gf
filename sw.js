@@ -1,4 +1,4 @@
-const CACHE_NAME = "ai-gf-v15";
+const CACHE_NAME = "ai-gf-v16";
 const ASSETS = [
   "./",
   "./index.html",
@@ -11,6 +11,7 @@ const ASSETS = [
   "./assets/bg-street.png",
   "./assets/bg-park.png",
   "./src/styles.css",
+  "./src/scene-tree.js",
   "./src/app.js"
 ];
 

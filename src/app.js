@@ -1,3 +1,5 @@
+import { SceneTree } from "./scene-tree.js";
+
 const STORAGE_KEY = "ai-gf-explore-v1";
 const WORLD = { width: 3200, height: 1600 };
 const QUESTS = [
@@ -111,6 +113,7 @@ let sceneH = 720;
 let photoFlash = 0;
 let dashFlash = 0;
 let endBanner = 0;
+const sceneTree = new SceneTree();
 
 const canvas = document.querySelector("#gameCanvas");
 const ctx = canvas.getContext ? canvas.getContext("2d") : null;
@@ -1058,10 +1061,8 @@ function roundRect(ctx, x, y, w, h, r) {
 function updateLoop(now) {
   const dt = Math.min(0.033, (now - lastTime) / 1000 || 0.016);
   lastTime = now;
-  if (!state.dialogueOpen) updateMovement(dt);
-  updateParticles(dt);
-  renderHud();
-  drawFrame();
+  sceneTree.update(dt);
+  sceneTree.render(renderer);
   if (!window.__AI_GF_DISABLE_AUTO_LOOP__) {
     requestAnimationFrame(updateLoop);
   }
@@ -1159,15 +1160,34 @@ function updateJoystickFromEvent(event) {
 function bootstrap() {
   resizeCanvas();
   bindInput();
+  sceneTree.add({
+    name: "world",
+    order: 0,
+    update(dt) {
+      if (!state.dialogueOpen) updateMovement(dt);
+      updateParticles(dt);
+    },
+    render() {
+      drawFrame();
+    }
+  });
+  sceneTree.add({
+    name: "ui",
+    order: 1,
+    render() {
+      renderHud();
+    }
+  });
   renderHud();
   if (state.questPanelOpen) els.questPanel.classList.remove("collapsed");
   els.dialogueSheet.hidden = !state.dialogueOpen;
   els.promptText.textContent = state.prompt;
-  drawFrame();
+  sceneTree.render(renderer);
   if (!window.__AI_GF_DISABLE_AUTO_LOOP__) requestAnimationFrame(updateLoop);
   window.__aiGfDebug = {
     state,
     quests: QUESTS,
+    scenes: sceneTree.scenes,
     interact: handleQuestInteraction,
     photo: handlePhoto,
     dash: triggerDash,

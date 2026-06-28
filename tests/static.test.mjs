@@ -9,6 +9,7 @@ const requiredFiles = [
   "index.html",
   "src/styles.css",
   "src/app.js",
+  "src/scene-tree.js",
   "manifest.webmanifest",
   "sw.js",
   "assets/icon.svg",
@@ -61,6 +62,7 @@ assert.match(css, /@media \(pointer: coarse\)/, "touch controls exist");
 
 assert.match(js, /const QUESTS = \[/, "quest data exists");
 assert.match(js, /const INTERACTABLES = \[/, "interactables exist");
+assert.match(js, /new SceneTree\(\)/, "scene tree exists");
 assert.match(js, /function handleQuestInteraction\(/, "quest interaction exists");
 assert.match(js, /function handlePhoto\(/, "photo action exists");
 assert.match(js, /function triggerDash\(/, "dash action exists");
@@ -69,7 +71,7 @@ assert.match(js, /function drawPlayer\(/, "player renderer exists");
 assert.match(js, /window\.__aiGfDebug/, "debug hook exists");
 
 assert.match(sw, /CACHE_NAME/, "service worker cache exists");
-assert.match(sw, /ai-gf-v15/, "service worker cache version is current");
+assert.match(sw, /ai-gf-v16/, "service worker cache version is current");
 assert.match(sw, /skipWaiting/, "service worker activates updates quickly");
 
 assert.equal(JSON.parse(manifest).display, "standalone", "manifest is installable");
