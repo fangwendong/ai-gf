@@ -264,6 +264,6 @@ debug.closeDialogue();
 debug.photo();
 assert.equal(debug.state.photoCount > 0, true);
 assert.equal(elements.get("#dialogueSheet").hidden, false);
-assert.match(elements.get("#dialogueText").textContent, /快门/);
+assert.match(elements.get("#dialogueText").textContent, /照片|收尾/);
 
 console.log("Runtime smoke checks passed.");

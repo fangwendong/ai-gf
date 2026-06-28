@@ -84,6 +84,12 @@ const ART = {
   linqiSprite: loadImage("./assets/linqi-2d.png")
 };
 
+const ZONES = {
+  apartment: { id: "apartment", label: "公寓", x: 0, y: 0, w: 1050, h: 800 },
+  street: { id: "street", label: "街区", x: 1050, y: 0, w: 1100, h: 800 },
+  park: { id: "park", label: "公园", x: 0, y: 800, w: 3200, h: 800 }
+};
+
 const defaultState = {
   questIndex: 0,
   bond: 0,
@@ -237,10 +243,25 @@ function distance(a, b) {
   return Math.hypot(a.x - b.x, a.y - b.y);
 }
 
+function getViewZone() {
+  const zone = currentZone();
+  if (zone === "公园") return ZONES.park;
+  if (zone === "街区") return ZONES.street;
+  return ZONES.apartment;
+}
+
+function worldToScreen(worldX, worldY, zone = getViewZone()) {
+  return {
+    x: ((worldX - zone.x) / zone.w) * sceneW,
+    y: ((worldY - zone.y) / zone.h) * sceneH
+  };
+}
+
 function screenToWorld(clientX, clientY) {
   const rect = canvas.getBoundingClientRect();
-  const x = ((clientX - rect.left) / rect.width) * sceneW + state.camera.x;
-  const y = ((clientY - rect.top) / rect.height) * sceneH + state.camera.y;
+  const zone = getViewZone();
+  const x = zone.x + ((clientX - rect.left) / rect.width) * zone.w;
+  const y = zone.y + ((clientY - rect.top) / rect.height) * zone.h;
   return { x, y };
 }
 
@@ -408,7 +429,15 @@ function handleQuestInteraction() {
             memory: "你和林栖在喷泉前拍下了今天。",
             reward: "photo",
             dialogue: "快门声落下了。现在这一晚有了可以回头看的证据。",
-            choices: [{ label: "继续", onSelect: closeDialogue }]
+            choices: [{ label: "继续", onSelect: closeDialogue }],
+            onComplete: () => {
+              state.player.x = 220;
+              state.player.y = 430;
+              state.companion.x = 430;
+              state.companion.y = 420;
+              state.camera.x = 0;
+              state.camera.y = 0;
+            }
           })
         },
         {
@@ -417,7 +446,15 @@ function handleQuestInteraction() {
             memory: "林栖先看向镜头，然后点头让你按下快门。",
             reward: "photo",
             dialogue: "好。你先看我，我再看镜头。",
-            choices: [{ label: "继续", onSelect: closeDialogue }]
+            choices: [{ label: "继续", onSelect: closeDialogue }],
+            onComplete: () => {
+              state.player.x = 220;
+              state.player.y = 430;
+              state.companion.x = 430;
+              state.companion.y = 420;
+              state.camera.x = 0;
+              state.camera.y = 0;
+            }
           })
         }
       ]);
@@ -439,6 +476,16 @@ function handlePhoto() {
   if (!state.photoUnlocked || state.dialogueOpen) return;
   const quest = CURRENT_QUEST();
   if (quest.id !== "photo") {
+    if (quest.id === "home" && state.zone === "公寓") {
+      photoFlash = 0.22;
+      state.photoCount += 1;
+      addMemory("你把今晚的照片挂回了房间。");
+      saveState();
+      openQuestBeat("照片挂上去了。今晚终于有了收尾。", [
+        { label: "继续", onSelect: closeDialogue }
+      ]);
+      return;
+    }
     if (state.zone !== "公园" && !state.finalized) {
       setPrompt("去公园更适合拍照。");
       return;
@@ -557,11 +604,6 @@ function updateMovement(dt) {
   state.companion.x += (followX - state.companion.x) * 0.1;
   state.companion.y += (followY - state.companion.y) * 0.1;
 
-  const cameraTargetX = clamp(state.player.x - sceneW * 0.5 + state.player.facing * 22, 0, WORLD.width - sceneW);
-  const cameraTargetY = clamp(state.player.y - sceneH * 0.55, 0, WORLD.height - sceneH);
-  state.camera.x += (cameraTargetX - state.camera.x) * 0.08;
-  state.camera.y += (cameraTargetY - state.camera.y) * 0.08;
-
   const target = currentQuestTarget();
   if (target) {
     const dist = distance(state.player, target);
@@ -618,36 +660,65 @@ function updateParticles(dt) {
 
 function drawFrame() {
   const ctx = renderer;
-  ctx.clearRect(0, 0, sceneW, sceneH);
+  const pixelScale = canvas.width / sceneW;
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   const shakeX = state.camera.shake > 0 ? (Math.random() - 0.5) * 8 * state.camera.shake : 0;
   const shakeY = state.camera.shake > 0 ? (Math.random() - 0.5) * 8 * state.camera.shake : 0;
   if (state.camera.shake > 0) state.camera.shake = Math.max(0, state.camera.shake - 0.08);
 
   ctx.save();
-  ctx.translate(-state.camera.x + shakeX, -state.camera.y + shakeY);
+  const zone = getViewZone();
+  const scaleX = sceneW / zone.w;
+  const scaleY = sceneH / zone.h;
+  ctx.setTransform(
+    pixelScale * scaleX,
+    0,
+    0,
+    pixelScale * scaleY,
+    (-zone.x * scaleX + shakeX) * pixelScale,
+    (-zone.y * scaleY + shakeY) * pixelScale
+  );
   drawWorld(ctx);
-  drawDecor(ctx);
   drawInteractables(ctx);
   drawCompanion(ctx, state.companion.x, state.companion.y);
   drawPlayer(ctx, state.player.x, state.player.y);
   drawQuestGlow(ctx);
   ctx.restore();
 
+  ctx.setTransform(pixelScale, 0, 0, pixelScale, 0, 0);
   drawOverlay(ctx);
 }
 
 function drawWorld(ctx) {
-  const sky = ctx.createLinearGradient(0, 0, 0, WORLD.height);
+  const zone = getViewZone();
+  const sky = ctx.createLinearGradient(zone.x, zone.y, zone.x, zone.y + zone.h);
   sky.addColorStop(0, "#172340");
-  sky.addColorStop(0.48, "#111a2b");
+  sky.addColorStop(0.5, "#111a2b");
   sky.addColorStop(1, "#0a0e16");
   ctx.fillStyle = sky;
-  ctx.fillRect(0, 0, WORLD.width, WORLD.height);
+  ctx.fillRect(zone.x, zone.y, zone.w, zone.h);
 
-  drawApartment(ctx);
-  drawStreet(ctx);
-  drawPark(ctx);
+  if (zone.id === "apartment") {
+    drawApartment(ctx);
+    return;
+  }
+  if (zone.id === "street") {
+    drawStreet(ctx);
+    return;
+  }
+  ctx.save();
+  const pixelScale = canvas.width / sceneW;
+  ctx.setTransform(pixelScale, 0, 0, pixelScale, 0, 0);
+  if (!drawImageCover(ctx, ART.parkBg, 0, 0, sceneW, sceneH, 0.55, 0.45)) {
+    const grass = ctx.createLinearGradient(0, 0, sceneW, sceneH);
+    grass.addColorStop(0, "#14341f");
+    grass.addColorStop(1, "#0d1f15");
+    ctx.fillStyle = grass;
+    ctx.fillRect(0, 0, sceneW, sceneH);
+  }
+  ctx.restore();
 }
 
 function drawApartment(ctx) {
@@ -839,6 +910,57 @@ function drawPark(ctx) {
   ctx.beginPath();
   ctx.arc(2790, 980, 56, 0, Math.PI * 2);
   ctx.fill();
+}
+
+function drawForeground(ctx) {
+  const baseY = 1140;
+  const slope = ctx.createLinearGradient(0, baseY, WORLD.width, WORLD.height);
+  slope.addColorStop(0, "rgba(8, 18, 28, 0.08)");
+  slope.addColorStop(1, "rgba(4, 10, 16, 0.24)");
+  ctx.fillStyle = slope;
+  ctx.fillRect(0, baseY, WORLD.width, WORLD.height - baseY);
+
+  const hedge = ctx.createLinearGradient(0, 1120, 0, WORLD.height);
+  hedge.addColorStop(0, "rgba(21, 47, 34, 0.18)");
+  hedge.addColorStop(1, "rgba(21, 47, 34, 0.72)");
+  ctx.fillStyle = hedge;
+  ctx.fillRect(0, 1200, WORLD.width, 400);
+
+  ctx.fillStyle = "rgba(64, 108, 84, 0.28)";
+  roundRect(ctx, 0, 1260, 760, 180, 72);
+  ctx.fill();
+  roundRect(ctx, 820, 1250, 540, 190, 72);
+  ctx.fill();
+  roundRect(ctx, 1500, 1268, 680, 168, 72);
+  ctx.fill();
+
+  ctx.fillStyle = "rgba(29, 48, 70, 0.34)";
+  roundRect(ctx, 0, 1240, WORLD.width, 26, 0);
+  ctx.fill();
+
+  ctx.fillStyle = "rgba(255, 232, 200, 0.18)";
+  ctx.fillRect(1220, 1090, 70, 220);
+  ctx.fillRect(2260, 1100, 72, 210);
+  ctx.fillStyle = "rgba(255, 244, 220, 0.34)";
+  ctx.beginPath();
+  ctx.arc(1255, 1088, 26, 0, Math.PI * 2);
+  ctx.arc(2296, 1098, 26, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.fillStyle = "rgba(245, 220, 160, 0.12)";
+  ctx.beginPath();
+  ctx.arc(1160, 1270, 88, 0, Math.PI * 2);
+  ctx.arc(2430, 1260, 92, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.fillStyle = "rgba(255,255,255,0.06)";
+  for (let i = 0; i < 12; i += 1) {
+    const x = 180 + i * 240;
+    const y = 1210 + (i % 2) * 16;
+    ctx.beginPath();
+    ctx.arc(x, y, 2.4, 0, Math.PI * 2);
+    ctx.fill();
+  }
 }
 
 function drawDecor(ctx) {

@@ -1,4 +1,4 @@
-const CACHE_NAME = "ai-gf-v16";
+const CACHE_NAME = "ai-gf-v17";
 const ASSETS = [
   "./",
   "./index.html",

@@ -71,7 +71,7 @@ assert.match(js, /function drawPlayer\(/, "player renderer exists");
 assert.match(js, /window\.__aiGfDebug/, "debug hook exists");
 
 assert.match(sw, /CACHE_NAME/, "service worker cache exists");
-assert.match(sw, /ai-gf-v16/, "service worker cache version is current");
+assert.match(sw, /ai-gf-v17/, "service worker cache version is current");
 assert.match(sw, /skipWaiting/, "service worker activates updates quickly");
 
 assert.equal(JSON.parse(manifest).display, "standalone", "manifest is installable");
